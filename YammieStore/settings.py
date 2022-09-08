@@ -123,6 +123,8 @@ LOGIN_REDIRECT_URL='Shop:home'
 LOGOUT_REDIRECT_URL='Shop:home'
 LOGIN_URL='users:login'
 CRISPY_FORMS_PACK ='bootstrap4'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR /'Media'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 

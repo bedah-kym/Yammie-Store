@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from PIL import Image
 
 CATEGORY_CHOICES=[
     ('cow products','for cows'),
@@ -16,6 +17,8 @@ class Item(models.Model):
     description = models.TextField(default=True)
     in_stock = models.BooleanField(default=True)
     discount = models.IntegerField(default=0)
+    item_image = models.ImageField(null=False,upload_to="product_pics")
+
 
     def __str__(self):
         return self.title
@@ -25,6 +28,16 @@ class Item(models.Model):
 
     def get_remove_from_cart_url(self):
         return reverse('Shop:remove_from_cart', kwargs={'product_id' : self.pk})
+
+    def save(self):
+        super().save()
+        img = Image.open(self.item_image.path)
+        if img.width > 100 or img.height > 100:
+            outputsize=(200,200)
+            img.thumbnail(outputsize)
+            img.save(self.item_image.path)
+
+
 
 class CartItem (models.Model):
     item = models.ForeignKey(Item,on_delete=models.CASCADE)
@@ -36,7 +49,7 @@ class CartItem (models.Model):
         return f"{self.quantity} bag(s) of {self.item.weight}kg {self.item}"
 
 class Cart(models.Model):
-    items = models.ManyToManyField(CartItem,null=True,default=True)
+    items = models.ManyToManyField(CartItem)
     owner = models.ForeignKey(User,on_delete=models.CASCADE)
     order_date = models.DateTimeField(auto_now_add=True)
     ordered = models.BooleanField(default=False)

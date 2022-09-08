@@ -282,12 +282,13 @@
                   <span class="sr-only">(current)</span>
                 </a>
               </li>
-              <li class="page-item default">
-                <a class="page-link" href="?page={{page_obj.next_page_number}}">{{page_obj.next_page_number}}
-                  <span class="sr-only">(current)</span>
-                </a>
-              </li>
-
+              {%if page_obj.next_page_number != paginator.num_pages %}
+                <li class="page-item default">
+                  <a class="page-link" href="?page={{page_obj.next_page_number}}">{{page_obj.next_page_number}}
+                    <span class="sr-only">(current)</span>
+                  </a>
+                </li>
+              {% endif %}
 
 
               {%if page_obj.has_next %}

@@ -17,16 +17,27 @@ class homeview(ListView):
 
 def productview(request,product_id):
     product= Item.objects.get(pk=product_id)
-    return render(request,'Shop/product-page.html',{"product":product})
+    cart = Cart.objects.filter(owner=request.user,ordered=False)[0]
+    items = cart.items.filter(user=request.user,ordered=False)
+    total = items.count()
+
+    return render(request,'Shop/product-page.html',{"product":product,"cart_total":total})
 
 def checkoutview(request):
-    return render(request,'Shop/checkout-page.html',{})
+    cart = Cart.objects.filter(owner=request.user,ordered=False)[0]
+    items = cart.items.filter(user=request.user,ordered=False)
+    total = items.count()
+
+    return render(request,'Shop/checkout-page.html',{"items":items,"cart_total":total})
 
 class categoryview(ListView):
     model = Item
     template_name = 'Shop/category-page.html'
     context_object_name = 'products'
     paginate_by= 4
+
+    def get_queryset(self):
+        return Item.objects.filter(category=self.kwargs.get('category'))
 
 
 def add_to_cart(request,product_id):

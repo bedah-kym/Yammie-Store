@@ -7,13 +7,13 @@ from django.http import Http404
 from django.utils import timezone
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.views.generic import ListView,DetailView,CreateView,DeleteView
 
-#from django.views.generic import ListView,DetailView,CreateView,DeleteView
-
-def homeview(request):
-    products = Item.objects.all()
-    return render(request,'Shop/home-page.html',{"products":products})
-    messages.warning(request,'you entered Bad Credentials')
+class homeview(ListView):
+    model = Item
+    template_name = 'Shop/home-page.html'
+    context_object_name = 'products'
+    paginate_by=2
 
 def productview(request,product_id):
     product= Item.objects.get(pk=product_id)
@@ -22,11 +22,12 @@ def productview(request,product_id):
 def checkoutview(request):
     return render(request,'Shop/checkout-page.html',{})
 
-def categoryview(request,category):
-    products = Item.objects.filter(category=category)
-    print(products)
+class categoryview(ListView):
+    model = Item
+    template_name = 'Shop/category-page.html'
+    context_object_name = 'products'
+    paginate_by= 4
 
-    return render(request,'Shop/category-page.html',{"products":products})
 
 def add_to_cart(request,product_id):
     product = Item.objects.get(pk=product_id)

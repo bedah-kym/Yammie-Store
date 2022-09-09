@@ -1,0 +1,50 @@
+{% extends 'Shop/base.html' %}
+{% load static %}
+  {% block content %}
+    <body style="margin-top:100px;">
+      <main class="text-center" style="margin-bottom:50%">
+        <div class="container">
+          {%for  message in messages %}
+              <div class="mx-auto alert alert-{{message.tags}} alert-dissmissible fade show col-lg-6 m-4 "role="alert" style="min-width:100px">
+                  {{message}}
+                  <button type="button" class="close"data-dismiss="alert"aria-label="close">
+                        <span aria-hidden="true">&times;</span>
+                  </button>
+
+              </div>
+          {% endfor %}
+          <div class="table-responsive text-nowrap mt-5">
+            <h2>Order Summary</h2>
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Item</th>
+                    <th scope="col">Item Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total Price </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in items %}
+                      <tr>
+                        <th scope="row1">{{forloop.counter}}</th>
+                        <td>{{item.item.title}} {{item.item.weight}}kgs</td>
+                        <td>{{item.item.price}}/=</td>
+                        <td>{{item.quantity}}bags <a href="{% url 'Shop:add_to_cart' item.item.id %}"><i class="fas fa-plus ml-3"></i></a> <a href="{% url 'Shop:remove_singleitem_from_cart' item.item.id %}"><i class="fas fa-minus ml-2"></i></a></td>
+                        <td>{{item.get_item_total_price}}/= <a href="{%url 'Shop:remove_from_cart' item.item.id %}"><i class="far fa-trash-alt float-right"></i></a></td>
+
+                      </tr>
+                  {% endfor %}
+                </tbody>
+                <td><a class="btn btn-primary " href="{% url 'Shop:home'%}">&laquo; continue shopping</a></td>
+                <td><a class="btn btn-warning " href="{% url 'Shop:checkout'%}">Go to checkout &raquo;</a></td>
+            </table>
+
+          </div>
+        </div>
+      </main>
+    </body>
+
+
+  {% endblock %}

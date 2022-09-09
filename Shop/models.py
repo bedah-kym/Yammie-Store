@@ -47,6 +47,8 @@ class CartItem (models.Model):
 
     def __str__(self):
         return f"{self.quantity} bag(s) of {self.item.weight}kg {self.item}"
+    def get_item_total_price(self):
+        return self.item.price * self.quantity
 
 class Cart(models.Model):
     items = models.ManyToManyField(CartItem)
@@ -55,4 +57,8 @@ class Cart(models.Model):
     ordered = models.BooleanField(default=False)
     total_price = models.IntegerField(default=0)
 
-    
+    def get_total_cart_price(self):
+        total = 0
+        for item in self.items.all():
+            total += item.get_item_total_price()
+        return total

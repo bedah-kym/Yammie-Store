@@ -74,6 +74,7 @@
             <li class="nav-item">
               <a class="nav-link waves-effect" href="https://mdbootstrap.com/docs/jquery/" target="_blank">About us</a>
             </li>
+
             {% if request.user.is_authenticated %}
                         <li class="nav-item">
                           <a class="nav-link waves-effect" href="{% url 'users:logout' %}" target="_blank">
@@ -81,9 +82,15 @@
                         </li>
 
                   </ul>
-
+                  
                   <!-- Right -->
                   <ul class="navbar-nav nav-flex-icons">
+                    <li class="nav-item">
+                      <a href="https://www.instagram.com/yammiefeeds/" class="nav-link waves-effect" target="_blank">
+                        <i class="far fa-envelope"></i>
+                      </a>
+                    </li>
+
                     <li class="nav-item">
                       <a class="nav-link waves-effect" href="{%url 'Shop:checkout'%}">
                         <span class="badge red z-depth-1 mr-1"> {{cart_total}} </span>
@@ -92,14 +99,16 @@
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a href="https://www.facebook.com/mdbootstrap" class="nav-link waves-effect" target="_blank">
+                      <a href="https://web.facebook.com/yammiefeeds" class="nav-link waves-effect" target="_blank">
                         <i class="fab fa-facebook-f"></i>
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a href="https://twitter.com/MDBootstrap" class="nav-link waves-effect" target="_blank">
-                        <i class="fab fa-twitter"></i>
+                      <a href="https://www.instagram.com/yammiefeeds/" class="nav-link waves-effect" target="_blank">
+                        <i class="fab fa-instagram"></i></i>
                       </a>
+                    </li>
+
                     </li>
                     <li class="nav-item">
                       <form class="form-inline">

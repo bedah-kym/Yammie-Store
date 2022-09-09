@@ -10,8 +10,10 @@ urlpatterns = [
     path('product/<int:product_id>/',views.productview,name='product'),
     path('category/<str:category>/',views.categoryview.as_view(),name='categories'),
     path('checkout/',views.checkoutview,name='checkout'),
+    path('order-summary/',views.ordersummary,name='order-summary'),
     path('add_to_cart/<int:product_id>/',views.add_to_cart,name='add_to_cart'),
     path('remove_from_cart/<int:product_id>/',views.remove_from_cart,name='remove_from_cart'),
+    path('remove_singleitem_from_cart/<int:product_id>/',views.remove_singleitem_from_cart,name='remove_singleitem_from_cart'),
 ]
 
 if settings.DEBUG:

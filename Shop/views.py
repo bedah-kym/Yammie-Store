@@ -1,7 +1,9 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect,render,get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_list_or_404
 from .models import Item,CartItem,Cart
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.http import Http404
 from django.utils import timezone
@@ -13,7 +15,7 @@ class homeview(ListView):
     model = Item
     template_name = 'Shop/home-page.html'
     context_object_name = 'products'
-    paginate_by=2
+    paginate_by=4
 
 def productview(request,product_id):
     product= Item.objects.get(pk=product_id)
@@ -23,12 +25,33 @@ def productview(request,product_id):
 
     return render(request,'Shop/product-page.html',{"product":product,"cart_total":total})
 
+@login_required
 def checkoutview(request):
     cart = Cart.objects.filter(owner=request.user,ordered=False)[0]
     items = cart.items.filter(user=request.user,ordered=False)
     total = items.count()
+    context= {
+        "items":items,
+        "cart_total":total,
+        "cart":cart
+    }
+    return render(request,'Shop/checkout-page.html',context)
 
-    return render(request,'Shop/checkout-page.html',{"items":items,"cart_total":total})
+@login_required
+def ordersummary(request):
+    cart = Cart.objects.filter(owner=request.user,ordered=False)[0]
+    items = cart.items.filter(user=request.user,ordered=False)
+    if cart and items.exists():
+        context= {
+            "items":items,
+            "cart":cart
+        }
+
+        return render(request,'Shop/order-summary.html',context)
+    else:
+        messages.info(request,'you have no active order')
+        return redirect('Shop:home')
+
 
 class categoryview(ListView):
     model = Item
@@ -39,7 +62,7 @@ class categoryview(ListView):
     def get_queryset(self):
         return Item.objects.filter(category=self.kwargs.get('category'))
 
-
+@login_required
 def add_to_cart(request,product_id):
     product = Item.objects.get(pk=product_id)
     if request.user.is_authenticated:
@@ -69,11 +92,11 @@ def add_to_cart(request,product_id):
             )
             new_cart.items.add(cart_item)
 
-        return redirect('Shop:product',product_id=product.id)
+        return redirect('Shop:order-summary')
     else:
         return redirect('users:login')
 
-
+@login_required
 def remove_from_cart(request,product_id):
     product = Item.objects.get(pk=product_id)
     if request.user.is_authenticated:
@@ -96,7 +119,36 @@ def remove_from_cart(request,product_id):
         else:
             messages.info(request,'You have not placed any order yet')
 
-        return redirect('Shop:product',product_id=product.id)
+        return redirect('Shop:order-summary')
     else:
         messages.warning('log in or create account first to shop')
         return redirect('users:login')
+
+@login_required
+def remove_singleitem_from_cart(request,product_id):
+    product = Item.objects.get(pk=product_id)
+    if request.user.is_authenticated:
+        # check if the user has an existing order which is not purchased
+        query=Cart.objects.filter(owner=request.user,ordered = False)
+        if query.exists():
+            cart = query[0]
+            if request.user == cart.owner:
+            #check if the item to remove exists in the cart get the cart item then remove it
+                if cart.items.filter(item=product):
+                    cart_item = CartItem.objects.filter(user=request.user,item=product,ordered=False)[0]
+                    cart_item.quantity -=1
+                    cart_item.save()
+                    messages.info(request,'this items quantityhas been decreased from your cart')
+
+                else:
+                    messages.info(request,'this item is not in your cart')
+
+                    #display message
+            #log user ip
+        else:
+            messages.info(request,'You have not placed any order yet')
+
+        return redirect('Shop:order-summary')
+    else:
+        messages.warning('log in or create account first to shop')
+        return redirect('Shop:order-summary')

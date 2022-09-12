@@ -17,6 +17,7 @@ class homeview(ListView):
     context_object_name = 'products'
     paginate_by=4
 
+@login_required
 def productview(request,product_id):
     product= Item.objects.get(pk=product_id)
     cart = Cart.objects.filter(owner=request.user,ordered=False)[0]
@@ -79,10 +80,10 @@ def add_to_cart(request,product_id):
                 print('in the cart')
                 cart_item.quantity +=1
                 cart_item.save()
-                messages.info(request,'this items quantity has been updated in your cart')
+                messages.info(request,f'{cart_item.item.title} quantity has been updated in your cart')
             else:
                 cart.items.add(cart_item)
-                messages.info(request,'this item has been added to your cart')
+                messages.info(request,f'{cart_item.item.title} has been added to your cart')
         else: # if the user has no cart make one with date and user and ordered = false the add the cart item we made
             print('created a new cart')
             new_cart = Cart.objects.create(
@@ -109,13 +110,11 @@ def remove_from_cart(request,product_id):
                 if cart.items.filter(item=product):
                     cart_item = CartItem.objects.filter(user=request.user,item=product,ordered=False)[0]
                     cart.items.remove(cart_item)
-                    messages.info(request,'this item has been removed from your cart')
+                    messages.info(request,f'{cart_item.item.title} has been removed from your cart')
 
                 else:
                     messages.info(request,'this item is not in your cart')
 
-                    #display message
-            #log user ip
         else:
             messages.info(request,'You have not placed any order yet')
 
@@ -136,12 +135,16 @@ def remove_singleitem_from_cart(request,product_id):
             #check if the item to remove exists in the cart get the cart item then remove it
                 if cart.items.filter(item=product):
                     cart_item = CartItem.objects.filter(user=request.user,item=product,ordered=False)[0]
-                    cart_item.quantity -=1
-                    cart_item.save()
-                    messages.info(request,'this items quantityhas been decreased from your cart')
+                    if cart_item.quantity > 1:
+                        cart_item.quantity -=1
+                        cart_item.save()
+                        messages.info(request,f'{cart_item.item.title} quantity has been decreased from your cart')
+                    else:
+                        cart.items.remove(cart_item)
+                        messages.info(request,f'{cart_item.item.title} has been removed from your cart')
 
                 else:
-                    messages.info(request,'this item is not in your cart')
+                    messages.info(request,f'{cart_item.item.title} is not in your cart')
 
                     #display message
             #log user ip

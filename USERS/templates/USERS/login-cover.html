@@ -64,18 +64,18 @@
             <div class="container">
               <div class="row justify-content-center">
                 <div class="col-xl-5 col-md-8">
+                  
 
                   <form class="bg-white rounded shadow-5-strong p-5" method="post">{% csrf_token %}
                     <!-- Email input -->
                     <div class="form-outline mb-4">
-                      <!--  <input type="name" id="form1Example1" class="form-control" />-->
-                        {{form.username}}
-                        <label class="form-label" for="form1Example1">username</label>
+                      <span class="form-text">Username</span>
+                      <label class="form-label" for="form1Example2">{{form.username}}</label>
                     </div>
 
                 <!-- Password input -->
                     <div class="form-outline mb-4">
-                      <span class="form-text">New password</span>
+                      <span class="form-text">password</span>
                       <label class="form-label" for="form1Example2">{{form.password}}</label>
                     </div>
                     <!-- 2 column grid layout for inline styling -->

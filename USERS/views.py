@@ -14,8 +14,7 @@ def registerview(request):
             form.save()
             messages.success(request,f'WELCOME {username} you can now shop')
             return redirect('users:login')
-        else:
-            messages.warning(request,'sorry,you entered Bad Credentials')
+        return redirect('users:register')
     else:
         form = registration_form()
     return render(request,'USERS/register.html',{'form':form})

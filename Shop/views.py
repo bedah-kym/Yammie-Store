@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic import ListView,DetailView,CreateView,DeleteView
+from .forms import checkoutform
 
 class homeview(ListView):
     model = Item
@@ -20,7 +21,7 @@ class homeview(ListView):
 @login_required
 def productview(request,product_id):
     product= Item.objects.get(pk=product_id)
-    cart = Cart.objects.filter(owner=request.user,ordered=False)[0]
+    cart,created = Cart.objects.get_or_create(owner=request.user,ordered=False)
     items = cart.items.filter(user=request.user,ordered=False)
     total = items.count()
 
@@ -31,11 +32,22 @@ def checkoutview(request):
     cart = Cart.objects.filter(owner=request.user,ordered=False)[0]
     items = cart.items.filter(user=request.user,ordered=False)
     total = items.count()
+    form = checkoutform()
+    if request.method == "POST":
+        form = checkoutform(request.POST)
+        print(request.POST)
+        if form.is_valid():
+            print('form is valid')
+        else:
+            return redirect('Shop:checkout')
     context= {
         "items":items,
         "cart_total":total,
-        "cart":cart
+        "cart":cart,
+        "form":form,
+
     }
+
     return render(request,'Shop/checkout-page.html',context)
 
 @login_required

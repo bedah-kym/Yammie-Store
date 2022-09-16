@@ -19,12 +19,17 @@
               <div class="card">
 
                 <!--Card content-->
-                <form class="card-body">
-
+                <form class="card-body" method="POST">{% csrf_token %}
+                  {% if form.errors %}
+                    <ul class="errorlist bg-warning m-1 p-1" style="text-align:left">
+                       {{form.errors}}
+                    </ul>
+                  {% endif %}
                   <!--address-->
                   <div class="md-form mb-5">
-                    <input type="text" id="address" class="form-control" placeholder="eg kienyeji village mwangis shop">
-                    <label for="address" class="">street/village Name</label>
+                  <!--  <input type="text" id="address" class="form-control" placeholder="eg kienyeji village mwangis shop"> -->
+                    {{form.street_name}}
+                    <label for="address" class=""></label>
                   </div>
 
                   <!--Grid row-->
@@ -32,30 +37,36 @@
 
                     <!--Grid column-->
                     <div class="col-lg-4 col-md-12 mb-4">
-
-                      <label for="country">County</label>
-                      <select class="custom-select d-block w-100" id="country" required>
-                        <option value="">Choose...</option>
-                        <option>United States</option>
-                      </select>
-                      <div class="invalid-feedback">
-                        Please select a valid country.
-                      </div>
+                      {{form.sub_county}}
+                      <label for="address" class="">Sub County</label>
+                      {% comment %}
+                          <label for="county">County</label>
+                          <select class="custom-select d-block w-100" id="country" required>
+                            <option value="">Choose...</option>
+                            <option>United States</option>
+                          </select>
+                          <div class="invalid-feedback">
+                            Please select a valid country.
+                          </div>
+                      {% endcomment %}
 
                     </div>
                     <!--Grid column-->
 
                     <!--Grid column-->
                     <div class="col-lg-4 col-md-6 mb-4">
-
-                      <label for="state">sub-county</label>
-                      <select class="custom-select d-block w-100" id="state" required>
-                        <option value="">Choose...</option>
-                        <option>California</option>
-                      </select>
-                      <div class="invalid-feedback">
-                        Please provide a valid state.
-                      </div>
+                      {{form.ward}}
+                      <label for="address" class="">Ward</label>
+                      {% comment %}
+                          <label for="state">sub-county</label>
+                          <select class="custom-select d-block w-100" id="state" required>
+                            <option value="">Choose...</option>
+                            <option>California</option>
+                          </select>
+                          <div class="invalid-feedback">
+                            Please provide a valid state.
+                          </div>
+                      {% endcomment %}
 
                     </div>
                     <!--Grid column-->
@@ -73,21 +84,20 @@
                     </div>
 
                   <hr>
-
-                  <div class="d-block my-3">
-                    <div class="custom-control custom-radio">
-                      <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
-                      <label class="custom-control-label" for="credit">Lipa na Mpesa</label>
+                  {% for value,name in form.fields.payment_options.choices %}
+                    <div class="d-block my-3">
+                      <div class="custom-control custom-radio">
+                        <input  id="{{name}}" name="payment_options" type="radio" class="custom-control-input" value={{value}} required>
+                        <label class="custom-control-label" for="{{name}}">{{value}}</label>
+                      </div>
                     </div>
-                    <div class="custom-control custom-radio">
-                      <input id="credit" name="paymentMethod" type="radio" class="custom-control-input" checked required>
-                      <label class="custom-control-label" for="credit">Cash on delivery</label>
-                    </div>
+                  {% endfor %}
 
-                  </div>
                   <hr class="mb-4">
-                  <button class="btn btn-primary btn-lg btn-block" type="submit">Place order </button>
-                  <button class="btn btn-primary btn-lg btn-block" type="submit">continue to payment </button>
+                  {% if payment_options.choices == 'Lipa na Mpesa' %}
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">continue to Mpesa payment </button>
+                  {% endif %}
+                  <button class="btn btn-primary btn-lg btn-block" type="submit"> Place order </button>
 
                 </form>
 

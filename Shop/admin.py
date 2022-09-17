@@ -8,11 +8,12 @@ class CartAdmin(admin.ModelAdmin):
     fieldsets=[
     ('product',{"fields":['items']}),
     ('is the order paid ?',{"fields":['ordered']}),
-    #('Date Ordered',{"fields":['order_date']}),
+    ('payment reference code',{"fields":['ref_code']}),
 
     ]
     inlines=[]
     list_display=['owner','order_date','ordered']
+    filter_by=['owner','order_date','ordered']
 
 
 admin.site.register(Cart,CartAdmin)

@@ -1,0 +1,61 @@
+{% extends 'Shop/base.html' %}
+{% load static %}
+  {% block content %}
+      <body class="grey lighten-3">
+    <!--Main layout-->
+        <main class="mt-5 pt-4">
+          <div class="container wow fadeIn">
+
+            <!-- Heading -->
+            <h2 class="my-5 h2 text-center">MPESA FORM </h2>
+
+            <!--Grid row-->
+            <div class="row">
+
+              <!--Grid column-->
+              <div class="col-md-8 mb-4">
+
+                <!--Card-->
+                <div class="card">
+
+                  <!--Card content-->
+                  <form class="card-body" method="POST">{% csrf_token %}
+                    {% if form.errors %}
+                      <ul class="errorlist bg-warning m-1 p-1" style="text-align:left">
+                         {{form.errors}}
+                      </ul>
+                    {% endif %}
+                    <!--address-->
+                    <div class="md-form mb-5">
+                    <!--  <input type="text" id="address" class="form-control" placeholder="eg kienyeji village mwangis shop"> -->
+                      {{form.phone_number}}
+                      <label for="address" class=""></label>
+                    </div>
+
+
+                    <hr>
+
+                    <hr>
+
+                    <button class="btn btn-primary btn-lg btn-block" type="submit"> Place order </button>
+
+                  </form>
+
+                </div>
+                <!--/.Card-->
+
+              </div>
+              <!--Grid column-->
+
+              <!--Grid column-->
+
+              <!--Grid column-->
+
+            </div>
+            <!--Grid row-->
+
+          </div>
+        </main>
+    <!--Main layout-->
+      </body>
+  {% endblock %}

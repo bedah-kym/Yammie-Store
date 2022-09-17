@@ -11,6 +11,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic import ListView,DetailView,CreateView,DeleteView
 from .forms import checkoutform
+from payment.code_generator import refcode
 
 class homeview(ListView):
     model = Item
@@ -35,11 +36,17 @@ def checkoutview(request):
     form = checkoutform()
     if request.method == "POST":
         form = checkoutform(request.POST)
-        print(request.POST)
         if form.is_valid():
-            print('form is valid')
-        else:
-            return redirect('Shop:checkout')
+            cart.total_price = cart.get_total_cart_price()
+            cart.ordered = True
+            for item in items:
+                item.ordered = True
+                item.save()
+            cart.ref_code = refcode()
+            cart.save()
+            print(cart.owner)
+            return HttpResponseRedirect(reverse('index'))
+        return redirect('Shop:checkout')
     context= {
         "items":items,
         "cart_total":total,

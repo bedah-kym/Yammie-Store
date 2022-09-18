@@ -27,6 +27,7 @@ def index (request):
             transaction_desc = f'Pay yammie feeds for online order number{cart.ref_code}'
             callback_url='https://darajambili.herokuapp.com/c2b/confirmation'
             response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+            return HttpResponse(response)
             """
 
     return render(request,'Shop/payment_form.html',{"form":form})

@@ -57,6 +57,9 @@ class Cart(models.Model):
     ordered = models.BooleanField(default=False)
     total_price = models.IntegerField(default=0)
     ref_code = models.CharField(max_length=30)
+    street_name= models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+    county = models.CharField(max_length=100)
 
 
     def get_total_cart_price(self):

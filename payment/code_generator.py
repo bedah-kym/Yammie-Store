@@ -32,7 +32,7 @@ def refcode():
     for x in range(0,3):
         new.append(random_string(letters))
         new.append(random_int())
-        new.append(random_char(special))
+        #new.append(random_char(special))
 
     refcode=  "".join(new)
     return str(refcode)

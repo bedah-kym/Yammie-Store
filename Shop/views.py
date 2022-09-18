@@ -30,22 +30,27 @@ def productview(request,product_id):
 
 @login_required
 def checkoutview(request):
-    cart = Cart.objects.filter(owner=request.user,ordered=False)[0]
+    cart = Cart.objects.filter(owner=request.user,ordered=False)[0] #use get get_object_or_404
     items = cart.items.filter(user=request.user,ordered=False)
     total = items.count()
     form = checkoutform()
     if request.method == "POST":
         form = checkoutform(request.POST)
         if form.is_valid():
+            cart.street_name = request.POST.get('street_name')
+            cart.county = request.POST.get('sub_county')
+            cart.location = request.POST.get('ward')
+            payment = request.POST.get('payment_options')
             cart.total_price = cart.get_total_cart_price()
             cart.ordered = True
-            for item in items:
+            for item in items: # this here loops through the carts items making them ordered=true
                 item.ordered = True
                 item.save()
-            cart.ref_code = refcode()
+            cart.ref_code = refcode()#assigns ref code to the cart
             cart.save()
-            print(cart.owner)
-            return HttpResponseRedirect(reverse('index'))
+            if payment == 'LipanaMpesa':
+                return HttpResponseRedirect(reverse('index'))
+            return redirect('Shop:home')# redirect to a succes page whih will tell the user to wait for agent confirmation call
         return redirect('Shop:checkout')
     context= {
         "items":items,

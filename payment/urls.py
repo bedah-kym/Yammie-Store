@@ -3,6 +3,6 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    #path('daraja/stk-push', views.stk_push_callback,name='mpesa_stk_push_callback'),
+    path('index', views.index2,name='mpesa_stk_push_callback'),
 
 ]

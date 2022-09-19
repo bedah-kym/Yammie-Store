@@ -16,32 +16,31 @@ def index (request):
     if request.method =="POST":
         form=payment_form(request.POST)
         if form.is_valid():
-            #cl = MpesaClient()
-            #token = cl.access_token()
+            cl = MpesaClient()
+            #print(token)
             phone_number = request.POST.get('phone_number')
             amount = cart.total_price
 
             payment_info.objects.create(phone_number=phone_number,amount=amount,cart_number=cart,user=request.user)
             account_reference = 'yammie feeds'
-            """
             transaction_desc = f'Pay yammie feeds for online order number{cart.ref_code}'
             callback_url='https://darajambili.herokuapp.com/c2b/confirmation'
             response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
-            return HttpResponse(response)
-            """
 
-    return render(request,'Shop/payment_form.html',{"form":form})
+            return HttpResponse(response) #redirect to the success page
+
+    return render(request,'Shop/payment_form.html',{"form":form,})
 
 
-"""def index(request):
+def index2(request):
     cl = MpesaClient()
-    token = cl.access_token()
+    #token = cl.access_token()
     # Use a Safaricom phone number that you have access to, for you to be able to view the prompt.
     phone_number = '0748677515'
     amount = 10
-    account_reference = 'yammie feeds'
+    account_reference = 'reference'
     transaction_desc = 'Description'
     callback_url='https://darajambili.herokuapp.com/c2b/confirmation'
     #callback_url = request.build_absolute_uri(reverse('mpesa_stk_push_callback'))
     response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
-    return HttpResponse(response)"""
+    return HttpResponse(response)

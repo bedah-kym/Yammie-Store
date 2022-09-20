@@ -41,16 +41,18 @@ def checkoutview(request):
             cart.county = request.POST.get('sub_county')
             cart.location = request.POST.get('ward')
             payment = request.POST.get('payment_options')
+            cart.payment_method = payment
             cart.total_price = cart.get_total_cart_price()
-            cart.ordered = True
             for item in items: # this here loops through the carts items making them ordered=true
                 item.ordered = True
                 item.save()
-            cart.ref_code = refcode()#assigns ref code to the cart
+            cart.ref_code = refcode()
+            cart.ordered = True #assigns ref code to the cart
             cart.save()
             if payment == 'LipanaMpesa':
                 return HttpResponseRedirect(reverse('index'))
-            return redirect('Shop:home')# redirect to a succes page whih will tell the user to wait for agent confirmation call
+            #cart.user_phone = request.user.username
+            return redirect('Shop:order-success')# redirect to a succes page whih will tell the user to wait for agent confirmation call
         return redirect('Shop:checkout')
     context= {
         "items":items,
@@ -77,6 +79,13 @@ def ordersummary(request):
         messages.info(request,'you have no active order')
         return redirect('Shop:home')
 
+@login_required
+def ordersuccess(request):
+    qs = Cart.objects.filter(owner=request.user,ordered=True)
+    last = len(qs)-1
+    cart = Cart.objects.filter(owner=request.user,ordered=True)[last]
+    ref= cart.ref_code
+    return render(request,'Shop/order-success.html',{"refcode":ref})
 
 class categoryview(ListView):
     model = Item

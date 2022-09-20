@@ -10,11 +10,12 @@ class CartAdmin(admin.ModelAdmin):
     ('product',{"fields":['items']}),
     ('is the order paid ?',{"fields":['ordered']}),
     ('payment reference code',{"fields":['ref_code']}),
+    ('payment method',{"fields":['payment_method']}),
     ('deliverly location',{"fields":['county','location','street_name']}),
-
+    ('has the client been called ?',{"fields":['agent_confirmed']})
     ]
     inlines=[]
-    list_display=['owner','order_date','ordered']
+    list_display=['owner','order_date','ordered','payment_method','agent_confirmed']
     filter_by=['owner','order_date','ordered']
 
 

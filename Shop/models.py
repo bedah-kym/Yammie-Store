@@ -60,7 +60,9 @@ class Cart(models.Model):
     street_name= models.CharField(max_length=100)
     location = models.CharField(max_length=100)
     county = models.CharField(max_length=100)
-
+    payment_method = models.CharField(max_length=20)
+    agent_confirmed = models.BooleanField(default=False)
+    user_phone = models.IntegerField(default=0)
 
     def get_total_cart_price(self):
         total = 0

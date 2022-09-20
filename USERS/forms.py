@@ -28,13 +28,19 @@ class registration_form (UserCreationForm):
             "auto-complete":"off"
         }))
 
-
-
         password2 = forms.CharField(widget=forms.TextInput(attrs={
             "type":"password",
             "id":"form1Example2",
             "class":"form-control",
             "placeholder":"********",
+
+        }))
+
+        Phone_Number = forms.IntegerField(widget=forms.TextInput(attrs={
+            "type":"number",
+            "id":"form1Example2",
+            "class":"form-control",
+            "placeholder":"this number will be used to call you when you place an order",
 
         }))
         class Meta:
@@ -43,5 +49,6 @@ class registration_form (UserCreationForm):
             'username',
             'email',
             'password1',
-            'password2'
+            'password2',
+            'Phone_Number'
             ]

@@ -56,9 +56,19 @@ class Cart(models.Model):
     order_date = models.DateTimeField(auto_now_add=True)
     ordered = models.BooleanField(default=False)
     total_price = models.IntegerField(default=0)
+    ref_code = models.CharField(max_length=30)
+    street_name= models.CharField(max_length=100)
+    location = models.CharField(max_length=100)
+    county = models.CharField(max_length=100)
+    payment_method = models.CharField(max_length=20)
+    agent_confirmed = models.BooleanField(default=False)
+    user_phone = models.IntegerField(default=0)
 
     def get_total_cart_price(self):
         total = 0
         for item in self.items.all():
             total += item.get_item_total_price()
         return total
+
+    def __str__(self):
+        return str(self.ref_code)

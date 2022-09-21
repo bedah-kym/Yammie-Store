@@ -1,0 +1,79 @@
+{% extends 'Shop/base.html' %}
+{% load static %}
+  {% block content %}
+      <body class="grey lighten-3">
+    <!--Main layout-->
+        <main class="mt-5 pt-4">
+          <div class="container wow fadeIn">
+
+            <div class="card" style="margin-left:5%;margin-right:5%">
+
+              <!--Card image-->
+              <div class="view overlay">
+                <img src="{% static 'Shop/img/wallet.gif' %}"  class="card-img-top" style="margin:0 auto ;background-size:contain; background-repeat:no-repeat; max-width:150px;max-height:150px;" alt="">
+              </div>
+              <!--Card image-->
+
+              <!--Card content-->
+              <div class="card-body text-center">
+                <!--Category & Title-->
+
+                <h5>
+                    <p>Hi!,You Can pay here just put your mpesa number and safaricom will give you a prompt
+                    to pay for your cart please look at the amount and only pay for your order.<br></p>
+                  <p> after you pay we will call you to confirm your order and deliverly location</p>
+                </h5>
+
+
+              <!--Card content-->
+
+            </div>
+            <!-- Heading -->
+            <h2 class="my-5 h2 text-center">MPESA FORM </h2>
+
+            <!--Grid row-->
+            <div class="row">
+
+              <!--Grid column-->
+              <div class="mx-auto col-md-8 mb-4">
+
+                <!--Card-->
+                <div class="card">
+
+                  <!--Card content-->
+                  <form class="card-body" method="POST">{% csrf_token %}
+                    {% if form.errors %}
+                      <ul class="errorlist bg-warning m-1 p-1" style="text-align:left">
+                         {{form.errors}}
+                      </ul>
+                    {% endif %}
+                    <!--address-->
+                    <div class="md-form mb-5">
+                    <!--  <input type="text" id="address" class="form-control" placeholder="eg kienyeji village mwangis shop"> -->
+                      {{form.phone_number}}
+                      <label for="address" class="">phone number</label>
+                    </div>
+
+
+                    <button class="btn btn-primary btn-lg btn-block" type="submit"> Place order </button>
+
+                  </form>
+
+                </div>
+                <!--/.Card-->
+
+              </div>
+              <!--Grid column-->
+
+              <!--Grid column-->
+
+              <!--Grid column-->
+
+            </div>
+            <!--Grid row-->
+
+          </div>
+        </main>
+    <!--Main layout-->
+      </body>
+  {% endblock %}

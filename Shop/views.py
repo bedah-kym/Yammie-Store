@@ -11,6 +11,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic import ListView,DetailView,CreateView,DeleteView
 from .forms import checkoutform
+from payment.code_generator import refcode
 
 class homeview(ListView):
     model = Item
@@ -29,17 +30,30 @@ def productview(request,product_id):
 
 @login_required
 def checkoutview(request):
-    cart = Cart.objects.filter(owner=request.user,ordered=False)[0]
+    cart = Cart.objects.filter(owner=request.user,ordered=False)[0] #use get get_object_or_404
     items = cart.items.filter(user=request.user,ordered=False)
     total = items.count()
     form = checkoutform()
     if request.method == "POST":
         form = checkoutform(request.POST)
-        print(request.POST)
         if form.is_valid():
-            print('form is valid')
-        else:
-            return redirect('Shop:checkout')
+            cart.street_name = request.POST.get('street_name')
+            cart.county = request.POST.get('sub_county')
+            cart.location = request.POST.get('ward')
+            payment = request.POST.get('payment_options')
+            cart.payment_method = payment
+            cart.total_price = cart.get_total_cart_price()
+            for item in items: # this here loops through the carts items making them ordered=true
+                item.ordered = True
+                item.save()
+            cart.ref_code = refcode()
+            cart.ordered = True #assigns ref code to the cart
+            cart.save()
+            if payment == 'LipanaMpesa':
+                return HttpResponseRedirect(reverse('index'))
+            #cart.user_phone = request.user.username
+            return redirect('Shop:order-success')# redirect to a succes page whih will tell the user to wait for agent confirmation call
+        return redirect('Shop:checkout')
     context= {
         "items":items,
         "cart_total":total,
@@ -65,6 +79,13 @@ def ordersummary(request):
         messages.info(request,'you have no active order')
         return redirect('Shop:home')
 
+@login_required
+def ordersuccess(request):
+    qs = Cart.objects.filter(owner=request.user,ordered=True)
+    last = len(qs)-1
+    cart = Cart.objects.filter(owner=request.user,ordered=True)[last]
+    ref= cart.ref_code
+    return render(request,'Shop/order-success.html',{"refcode":ref})
 
 class categoryview(ListView):
     model = Item

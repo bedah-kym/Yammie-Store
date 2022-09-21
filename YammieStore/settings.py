@@ -10,6 +10,51 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+# The Mpesa environment to use
+# Possible values: sandbox, production
+
+MPESA_ENVIRONMENT = 'sandbox'
+
+# Credentials for the daraja app
+
+MPESA_CONSUMER_KEY = 'NotbioGiMaUXNwnjIbffDUfvTlM35qIH'
+MPESA_CONSUMER_SECRET = 'q4pxl92RnvnauzkD'
+
+#Shortcode to use for transactions. For sandbox  use the Shortcode 1 provided on test credentials page
+
+MPESA_SHORTCODE = '1'
+
+# Shortcode to use for Lipa na MPESA Online (MPESA Express) transactions
+# This is only used on sandbox, do not set this variable in production
+# For sandbox use the Lipa na MPESA Online Shorcode provided on test credentials page
+
+MPESA_EXPRESS_SHORTCODE = '174379'
+
+# Type of shortcode
+# Possible values:
+# - paybill (For Paybill)
+# - till_number (For Buy Goods Till Number)
+
+MPESA_SHORTCODE_TYPE = 'till_number'
+
+# Lipa na MPESA Online passkey
+# Sandbox passkey is available on test credentials page
+# Production passkey is sent via email once you go live
+
+MPESA_PASSKEY = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919'
+
+# Username for initiator (to be used in B2C, B2B, AccountBalance and TransactionStatusQuery Transactions)
+
+MPESA_INITIATOR_USERNAME = 'testapi'
+
+
+MPESA_INITIATOR_PASSWORD = 'Safaricom999!*!'
+
+
+# Plaintext password for initiator (to be used in B2C, B2B, AccountBalance and TransactionStatusQuery Transactions)
+
+MPESA_INITIATOR_SECURITY_CREDENTIAL = 'C5RG0iicDesSNLOQVsRMQ6Hc0sTgDH6F47IKTatCAH+GyrSKs4yEV12l0MGeMKbdGUAYILO8fSLTsNMWZKk6NeTy8E1Cb6nIxH91z9llE332EnG1h8TmVMnWTET+sk1uNfmPqn7Z2DuDiyuYtaonRWbESzFfW1YxX9bBvDWgmjMNNsN0IsTEB0c2oUh23zZQrPqNFBaA5Y1HMirco5wSjlbnP1f75pVRCL3GxLIcSOCGuwGI6uToaOOrn3OrwmAgSmwA4e13uwMoh8Ir6Fz0XI+uwmx9JGlHuELQuI5E+dXxL+dUwl//akOn4XT/jz5FiWI3qRNcHec627t/zPWJCw=='
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,7 +84,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Shop',
     'USERS',
-    'crispy_forms'
+    'crispy_forms',
+    'django_daraja',
+    'payment'
+
 ]
 
 MIDDLEWARE = [
@@ -108,7 +156,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 
 USE_I18N = True
 

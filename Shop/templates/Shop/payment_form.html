@@ -5,7 +5,28 @@
     <!--Main layout-->
         <main class="mt-5 pt-4">
           <div class="container wow fadeIn">
-            <div class="view" style="height:50%;background-image: url('{% static 'Shop/img/foodbags/tech-support.gif' %}');background-size:contain; background-repeat:no-repeat;">
+
+            <div class="card" style="margin-left:5%;margin-right:5%">
+
+              <!--Card image-->
+              <div class="view overlay">
+                <img src="{% static 'Shop/img/wallet.gif' %}"  class="card-img-top" style="margin:0 auto ;background-size:contain; background-repeat:no-repeat; max-width:150px;max-height:150px;" alt="">
+              </div>
+              <!--Card image-->
+
+              <!--Card content-->
+              <div class="card-body text-center">
+                <!--Category & Title-->
+
+                <h5>
+                    <p>Hi!,You Can pay here just put your mpesa number and safaricom will give you a prompt
+                    to pay for your cart please look at the amount and only pay for your order.<br></p>
+                  <p> after you pay we will call you to confirm your order and deliverly location</p>
+                </h5>
+
+
+              <!--Card content-->
+
             </div>
             <!-- Heading -->
             <h2 class="my-5 h2 text-center">MPESA FORM </h2>
@@ -14,7 +35,7 @@
             <div class="row">
 
               <!--Grid column-->
-              <div class="col-md-8 mb-4">
+              <div class="mx-auto col-md-8 mb-4">
 
                 <!--Card-->
                 <div class="card">
@@ -30,13 +51,9 @@
                     <div class="md-form mb-5">
                     <!--  <input type="text" id="address" class="form-control" placeholder="eg kienyeji village mwangis shop"> -->
                       {{form.phone_number}}
-                      <label for="address" class=""></label>
+                      <label for="address" class="">phone number</label>
                     </div>
 
-
-                    <hr>
-
-                    <hr>
 
                     <button class="btn btn-primary btn-lg btn-block" type="submit"> Place order </button>
 

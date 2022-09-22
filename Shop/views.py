@@ -21,7 +21,11 @@ class homeview(ListView):
 
 @login_required
 def productview(request,product_id):
-    product= Item.objects.get(pk=product_id)
+    try:
+        product = get_object_or_404(Item,pk=product_id)
+    except Http404 :
+        return redirect('Shop:home')
+    #product= Item.objects.get(pk=product_id)
     cart,created = Cart.objects.get_or_create(owner=request.user,ordered=False)
     items = cart.items.filter(user=request.user,ordered=False)
     total = items.count()
@@ -30,7 +34,10 @@ def productview(request,product_id):
 
 @login_required
 def checkoutview(request):
-    cart = Cart.objects.filter(owner=request.user,ordered=False)[0] #use get get_object_or_404
+    try:
+        cart = get_list_or_404(Cart,owner=request.user,ordered=False)[0]
+    except Http404 :
+        return redirect('Shop:home')
     items = cart.items.filter(user=request.user,ordered=False)
     total = items.count()
     form = checkoutform()
@@ -66,7 +73,11 @@ def checkoutview(request):
 
 @login_required
 def ordersummary(request):
-    cart = Cart.objects.filter(owner=request.user,ordered=False)[0]
+    try:
+        cart = get_list_or_404(Cart,owner=request.user,ordered=False)[0]
+    except Http404 :
+        return redirect('Shop:home')
+
     items = cart.items.filter(user=request.user,ordered=False)
     if cart and items.exists():
         context= {
@@ -81,7 +92,11 @@ def ordersummary(request):
 
 @login_required
 def ordersuccess(request):
-    qs = Cart.objects.filter(owner=request.user,ordered=True)
+    try:
+        qs = get_list_or_404(Cart,owner=request.user,ordered=True)
+    except Http404 :
+        return redirect('Shop:home')
+    #qs = Cart.objects.filter(owner=request.user,ordered=True)
     last = len(qs)-1
     cart = Cart.objects.filter(owner=request.user,ordered=True)[last]
     ref= cart.ref_code
@@ -98,7 +113,11 @@ class categoryview(ListView):
 
 @login_required
 def add_to_cart(request,product_id):
-    product = Item.objects.get(pk=product_id)
+    try:
+        product = get_object_or_404(Item,pk=product_id)
+    except Http404 :
+        return redirect('Shop:home')
+    #product = Item.objects.get(pk=product_id)
     if request.user.is_authenticated:
         #get the info from the user and make a cart_item the look if the user has an existing cart so get or create
         cart_item,created=CartItem.objects.get_or_create(user=request.user,item=product,ordered=False)
@@ -132,7 +151,11 @@ def add_to_cart(request,product_id):
 
 @login_required
 def remove_from_cart(request,product_id):
-    product = Item.objects.get(pk=product_id)
+    try:
+        product = get_object_or_404(Item,pk=product_id)
+    except Http404 :
+        return redirect('Shop:home')
+    #product = Item.objects.get(pk=product_id)
     if request.user.is_authenticated:
         # check if the user has an existing order which is not purchased
         query=Cart.objects.filter(owner=request.user,ordered = False)
@@ -158,7 +181,11 @@ def remove_from_cart(request,product_id):
 
 @login_required
 def remove_singleitem_from_cart(request,product_id):
-    product = Item.objects.get(pk=product_id)
+    try:
+        product = get_object_or_404(Item,pk=product_id)
+    except Http404 :
+        return redirect('Shop:home')
+    #product = Item.objects.get(pk=product_id)
     if request.user.is_authenticated:
         # check if the user has an existing order which is not purchased
         query=Cart.objects.filter(owner=request.user,ordered = False)

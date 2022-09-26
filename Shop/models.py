@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib import admin
 from django.contrib.auth.models import User
 from django.urls import reverse
 from PIL import Image
@@ -69,6 +70,10 @@ class Cart(models.Model):
         for item in self.items.all():
             total += item.get_item_total_price()
         return total
+
+    #@admin.display(ordering = 'order_date',description = "new orders")
+    def get_new_orders(self):
+        return self.items.filter(agent_confirmed=False)
 
     def __str__(self):
         return str(self.ref_code)

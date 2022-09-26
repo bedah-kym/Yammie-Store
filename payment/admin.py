@@ -4,6 +4,7 @@ from .models import payment_info
 
 class PaymentAdmin(admin.ModelAdmin):
 
-    list_display=['phone_number','amount','cart_number','user']
+    list_display=['user','phone_number','amount','cart_number','paid_on']
+
 
 admin.site.register(payment_info,PaymentAdmin)

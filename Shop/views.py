@@ -43,18 +43,19 @@ def checkoutview(request):
     form = checkoutform()
     if request.method == "POST":
         form = checkoutform(request.POST)
-        if form.is_valid():
+        if form.is_valid(): #DO custom validations
             cart.street_name = request.POST.get('street_name')
             cart.county = request.POST.get('sub_county')
             cart.location = request.POST.get('ward')
             payment = request.POST.get('payment_options')
+            #cart.user_phone = request.user.Phone_Number
             cart.payment_method = payment
             cart.total_price = cart.get_total_cart_price()
             for item in items: # this here loops through the carts items making them ordered=true
                 item.ordered = True
                 item.save()
             cart.ref_code = refcode()
-            cart.ordered = True #assigns ref code to the cart
+            cart.ordered = True
             cart.save()
             if payment == 'LipanaMpesa':
                 return HttpResponseRedirect(reverse('index'))
@@ -114,7 +115,7 @@ class categoryview(ListView):
 @login_required
 def add_to_cart(request,product_id):
     try:
-        product = get_object_or_404(Item,pk=product_id)
+        product = get_object_or_404(Item,pk=product_id,in_stock=True)
     except Http404 :
         return redirect('Shop:home')
     #product = Item.objects.get(pk=product_id)

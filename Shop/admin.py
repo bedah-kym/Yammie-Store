@@ -17,7 +17,7 @@ class CartAdmin(admin.ModelAdmin):
     ]
     inlines= []
     list_display = ['owner','order_date','ordered','payment_method','agent_confirmed']
-    list_filter =  ['payment_method','order_date']
+    list_filter =  ['payment_method','order_date','ordered']
 
 
 admin.site.register(Cart,CartAdmin)

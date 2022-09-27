@@ -8,10 +8,10 @@ class ItemAdmin(admin.ModelAdmin):
 
 class CartAdmin(admin.ModelAdmin):
     fieldsets=[
-    #('product',{"fields":['items']}),
+    ('product',{"fields":['items']}),
     ('is the order paid ?',{"fields":['ordered']}),
     ('payment reference code',{"fields":['ref_code']}),
-    ('payment method',{"fields":['payment_method']}),
+    ('payment info',{"fields":['payment_method','total_price']}),
     ('deliverly info ',{"fields":['owner','user_phone','county','location','street_name']}),
     ('has the client been called ?',{"fields":['agent_confirmed']})
     ]

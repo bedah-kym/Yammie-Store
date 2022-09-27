@@ -70,7 +70,7 @@ SECRET_KEY = 'django-insecure-nvim#ldvl8d$n3tc#wkc7)q!s@^yhttdfwtm9v2xg7%^87hvx%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition

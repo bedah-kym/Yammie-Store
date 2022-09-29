@@ -17,9 +17,14 @@ def index (request):
         form=payment_form(request.POST)
         if form.is_valid():
             cl = MpesaClient()
-            #print(token)
+
             phone_number = request.POST.get('phone_number')
             amount = cart.total_price
+            payment = cart.payment_method
+            user = cart.owner
+            street = cart.street_name
+            Location = cart.location
+            County = cart.county
 
             payment_info.objects.create(phone_number=phone_number,amount=amount,cart_number=cart,user=request.user)
             account_reference = 'yammie feeds'

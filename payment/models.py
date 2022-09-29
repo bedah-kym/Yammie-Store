@@ -8,3 +8,8 @@ class payment_info(models.Model):
     amount = models.IntegerField(default=0)
     cart_number = models.ForeignKey(Cart,on_delete=models.CASCADE)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
+    payment_method = models.CharField(max_length=20,default='none')
+    paid_on = models.DateTimeField(auto_now_add=True)
+    street = models.CharField(max_length=100,default='none')
+    location = models.CharField(max_length=100,default='none')
+    #County = models.CharField(max_length=100,default='None')

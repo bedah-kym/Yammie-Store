@@ -78,7 +78,7 @@ DEBUG = str(os.environ.get('DEBUG')) == "1" #apparently this is dangerous find o
 
 ALLOWED_HOSTS = []
 if not DEBUG :
-    ALLOWED_HOSTS += [os.environ.get(ALLOWED_HOSTS)]
+    ALLOWED_HOSTS += [os.environ.get('ALLOWED_HOSTS')]
 
 
 # Application definition

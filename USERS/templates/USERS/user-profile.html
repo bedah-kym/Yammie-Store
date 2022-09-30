@@ -1,0 +1,112 @@
+{% load static %}
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>YAMMIE Fresh</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'Shop/css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="{% static 'Shop/css/mdb.min.css' %}" rel="stylesheet">
+    <!-- Your custom styles (optional) -->
+    <link href="{% static 'Shop/css/style.min.css' %}" rel="stylesheet">
+
+    <a class="navbar-brand waves-effect p-2 m-2" href="{% url 'Shop:home' %}" target="_blank">
+      <strong class="blue-text" style="margin:0 auto">YAMMIE FRESH LTD</strong> <!--add dissapearing aniamtion -->
+    </a>
+    <body>
+
+      <main class="main  " style="height:100%; ">
+        <div class="card shadow-lg " style="margin-left:5%;margin-right:5% ">
+
+          <!--Card image-->
+          <div class="view overlay text-center ">
+            <strong><h2 class="m-2 p-2">MY PROFILE</h2></strong>
+          </div>
+          <!--Card image-->
+
+          <!--Card content-->
+          <div class="card-body text-center">
+            <!--Category & Title-->
+
+            <h5>
+              <strong>
+                <p>{{user}}</p>
+                <p>{{user.email}}</p>
+                <p>+254 {{user_profile.cell_number}}</p>
+              </strong>
+            </h5>
+
+
+          <!--Card content-->
+
+        </div>
+        <div class="view overlay">
+          <form class="card-body"  method="POST">{% csrf_token %}
+            <div class="md-form mb-5">
+              {{p_form}}
+            </div>
+
+            <button class="btn btn-secondary"type="submit" name="">update phone number</button>
+          </form>
+
+        </div>
+        <!--order list -->
+
+        <div class="card-body">
+          <div class="text-center mb-5">
+            <strong> My Orders</strong>
+            <div class="table-responsive text-nowrap mt-5">
+              <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Cart number</th>
+                      <th scope="col">Price paid</th>
+                      <th scope="col">payment method</th>
+                      <th scope="col">has agent confirmed ?</th>
+                      <th scope="col">date ordered </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for order in orders %}
+                        <tr>
+                          <th scope="row1">{{forloop.counter}}</th>
+                          <td>{{order}}</td>
+                          <td>{{order.total_price}}/=</td>
+                          <td>{{order.payment_method}}</td>
+                          <td>{{order.agent_confirmed}}</td>
+                          <td>{{order.order_date}}</td>
+
+                        </tr>
+                    {% endfor %}
+                  </tbody>
+                  <td><a class="btn btn-primary " href="{% url 'Shop:home'%}">&laquo; continue shopping</a></td>
+
+              </table>
+            </div>
+          </div>
+        </div>
+
+
+      </main>
+    </body>
+
+
+
+      <script type="text/javascript" src="{% static 'Shop/js/jquery-3.4.1.min.js' %}"></script>
+      <!-- Bootstrap tooltips -->
+      <script type="text/javascript" src="{% static 'Shop/js/popper.min.js' %}"></script      <!-- Bootstrap core JavaScript -->
+      <script type="text/javascript" src="{% static 'Shop/js/bootstrap.min.js' %}"></script>
+      <!-- MDB core JavaScript -->
+      <script type="text/javascript" src="{% static 'Shop/js/mdb.min.js' %}"></script>
+      <!-- Initializations -->
+      <script type="text/javascript">
+        // Animations initialization
+        new WOW().init();
+      </script>

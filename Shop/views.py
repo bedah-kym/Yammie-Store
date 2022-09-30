@@ -48,7 +48,8 @@ def checkoutview(request):
             cart.county = request.POST.get('sub_county')
             cart.location = request.POST.get('ward')
             payment = request.POST.get('payment_options')
-            #cart.user_phone = request.user.Phone_Number
+            cart.order_date = timezone.now()
+            cart.user_phone = request.user.profile.cell_number
             cart.payment_method = payment
             cart.total_price = cart.get_total_cart_price()
             for item in items: # this here loops through the carts items making them ordered=true

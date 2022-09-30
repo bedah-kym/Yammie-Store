@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-
+from .models import profile
 
 
 class registration_form (UserCreationForm):
@@ -36,13 +36,7 @@ class registration_form (UserCreationForm):
 
         }))
 
-        Phone_Number = forms.IntegerField(widget=forms.TextInput(attrs={
-            "type":"number",
-            "id":"form1Example2",
-            "class":"form-control",
-            "placeholder":"this number will be used to call you when you place an order",
 
-        }))
         class Meta:
             model=User
             fields=[
@@ -50,5 +44,18 @@ class registration_form (UserCreationForm):
             'email',
             'password1',
             'password2',
-            'Phone_Number'
+
             ]
+
+
+class profileupadateform(forms.ModelForm):
+    cell_number = forms.IntegerField(widget=forms.TextInput(attrs={
+        "type":"name",
+        "id":"form1Example1",
+        "class":"form-control",
+        "placeholder":"",
+
+    }))
+    class Meta:
+        model= profile
+        fields=['cell_number']

@@ -29,6 +29,7 @@ def productview(request,product_id):
     cart,created = Cart.objects.get_or_create(owner=request.user,ordered=False)
     items = cart.items.filter(user=request.user,ordered=False)
     total = items.count()
+    #print(request.headers)
 
     return render(request,'Shop/product-page.html',{"product":product,"cart_total":total})
 

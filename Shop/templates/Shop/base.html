@@ -86,7 +86,7 @@
                   <!-- Right -->
                   <ul class="navbar-nav nav-flex-icons">
                     <li class="nav-item">
-                      <a href="#" class="nav-link waves-effect" target="_blank">
+                      <a href="{% url 'users:profile' %}" class="nav-link waves-effect" target="_blank">
                         <i class="far fa-envelope"></i>
                       </a>
                     </li>
@@ -98,13 +98,13 @@
                         <span class="clearfix d-none d-sm-inline-block"> Cart </span>
                       </a>
                     </li>
-
+                  {%comment%}
                     <li class="nav-item">
                       <form class="form-inline">
                         <div class="md-form my-0">
                           <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
                         </div>
-
+                  {%endcomment%}
 
                      </form>
                    </li>

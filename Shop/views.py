@@ -29,6 +29,7 @@ def productview(request,product_id):
     cart,created = Cart.objects.get_or_create(owner=request.user,ordered=False)
     items = cart.items.filter(user=request.user,ordered=False)
     total = items.count()
+    #print(request.headers)
 
     return render(request,'Shop/product-page.html',{"product":product,"cart_total":total})
 
@@ -48,7 +49,8 @@ def checkoutview(request):
             cart.county = request.POST.get('sub_county')
             cart.location = request.POST.get('ward')
             payment = request.POST.get('payment_options')
-            #cart.user_phone = request.user.Phone_Number
+            cart.order_date = timezone.now()
+            cart.user_phone = request.user.profile.cell_number
             cart.payment_method = payment
             cart.total_price = cart.get_total_cart_price()
             for item in items: # this here loops through the carts items making them ordered=true

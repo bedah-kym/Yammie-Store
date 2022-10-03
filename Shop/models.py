@@ -54,7 +54,7 @@ class CartItem (models.Model):
 class Cart(models.Model):
     items = models.ManyToManyField(CartItem)
     owner = models.ForeignKey(User,on_delete=models.CASCADE)
-    order_date = models.DateTimeField(auto_now_add=True)
+    order_date = models.DateTimeField(null=True)
     ordered = models.BooleanField(default=False)
     total_price = models.IntegerField(default=0)
     ref_code = models.CharField(max_length=30)

@@ -4,6 +4,13 @@ from django.shortcuts import get_list_or_404
 from .forms import registration_form,profileupadateform
 from django.contrib import messages
 from Shop.models import Cart
+from django.utils import timezone
+from django.http import Http404
+from .models import profile,PromoCode
+from payment.code_generator import refcode
+from django.contrib.auth.models import User
+
+
 
 
 def registerview(request):
@@ -13,8 +20,8 @@ def registerview(request):
         if form.is_valid():
             username=form.cleaned_data.get('username')
             form.save()
-            messages.success(request,f'WELCOME {username} you can now shop')
-            return redirect('users:login')
+            messages.warning(request,f'WELCOME {username} please add your phone number to continue')
+            return redirect('users:profile')
         messages.warning(request,'invalid credentials')
         return redirect('users:register')
     else:
@@ -22,11 +29,39 @@ def registerview(request):
     return render(request,'USERS/register.html',{'form':form})
 
 @login_required
+def makeagent(request):
+    user = request.user
+    user_profile=user.profile
+    try:
+        qs = get_object_or_404(profile,user_name=user,is_anon_agent=False)
+    except Http404:
+        return redirect('users:profile')
+    code=PromoCode.objects.create(
+        token = user_profile.user_name.username+'-'+refcode(),
+    	owner = request.user.profile,
+    	created_at = timezone.now(),
+    )
+    qs.is_anon_agent=True
+    qs.save()
+
+    return redirect('users:profile')
+
+@login_required
 def profileview(request):
     user= request.user
     user_profile=user.profile
-    orders = get_list_or_404(Cart,owner=user)
-    #print(orders)
+    valid_code=''
+    created=''
+    orders=[]
+    if user_profile.is_anon_agent:
+        try:
+            orders = get_list_or_404(Cart,owner=user)
+        except Http404:
+            orders=[]
+        code = get_list_or_404(PromoCode,owner=user_profile)[0]
+        valid_code =PromoCode.get_valid_code(user_profile,code)
+        created=code.created_at
+    
     p_form = profileupadateform()
     if request.method == "POST":
         p_form = profileupadateform(request.POST,instance=user_profile)
@@ -40,6 +75,8 @@ def profileview(request):
         'user_profile':user_profile,
         'user' :user,
         'orders':orders,
-        'p_form':p_form
+        'p_form':p_form,
+        'code':valid_code,
+        'created':created
     }
     return render(request,'USERS/user-profile.html',context)

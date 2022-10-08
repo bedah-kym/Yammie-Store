@@ -1,4 +1,17 @@
 from django.contrib import admin
-from .models import profile
+from .models import profile,PromoCode
 
-admin.site.register(profile)
+class PromoInline(admin.TabularInline):
+    model=PromoCode
+
+class ProfileAdmin(admin.ModelAdmin):
+    fieldsets=[
+    (' ',{"fields":['user_name']}),
+    ('agent details ',{"fields":['is_anon_agent','cell_number','commission']}),
+    ]
+    inlines=[PromoInline]
+    list_display=['user_name','is_anon_agent','cell_number']
+    list_filter = ['is_anon_agent']
+
+admin.site.register(profile,ProfileAdmin)
+#admin.site.register(PromoCode)

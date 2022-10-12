@@ -19,6 +19,7 @@ class homeview(ListView):
     template_name = 'Shop/home-page.html'
     context_object_name = 'products'
     paginate_by=4
+    ordering=['-added_on']
 
 @login_required
 def productview(request,product_id):

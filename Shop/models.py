@@ -19,7 +19,7 @@ class Item(models.Model):
     in_stock = models.BooleanField(default=True)
     discount = models.IntegerField(default=0)
     item_image = models.ImageField(null=False,upload_to="product_pics")
-
+    added_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
@@ -29,7 +29,7 @@ class Item(models.Model):
 
     def get_remove_from_cart_url(self):
         return reverse('Shop:remove_from_cart', kwargs={'product_id' : self.pk})
-
+"""
     def save(self):
         super().save()
         img = Image.open(self.item_image.path)
@@ -37,7 +37,7 @@ class Item(models.Model):
             outputsize=(200,200)
             img.thumbnail(outputsize)
             img.save(self.item_image.path)
-
+"""
 
 
 class CartItem (models.Model):

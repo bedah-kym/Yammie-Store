@@ -30,3 +30,15 @@ class checkoutform(forms.Form):
 
     }))
     payment_options = forms.ChoiceField(widget=forms.RadioSelect,choices=PAYMENT_CHOICES)
+
+
+
+class promocodeform(forms.Form):
+    p_code = forms.CharField(widget=forms.TextInput(attrs={
+        "type":"text",
+        "class":"form-control",
+        "placeholder" : "Promo code ",
+        "aria-label": "Recipient's username",
+        "aria-describedby": "basic-addon2"
+
+    }))

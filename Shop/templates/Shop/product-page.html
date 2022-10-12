@@ -13,7 +13,7 @@
             <!--Grid column-->
             <div class="col-md-6 mb-4">
 
-              <img src="{%static 'Shop/img/foodbags/chickmash.jpg'%}" class="img-fluid" alt="">
+              <img src="{{ product.item_image.url }}" style="max-width:500px"class="img-fluid" alt="">
 
             </div>
             <!--Grid column-->
@@ -101,27 +101,13 @@
           <div class="row wow fadeIn">
 
             <!--Grid column-->
-            <div class="col-lg-4 col-md-12 mb-4">
+            {% for item in related_items %}
+                <div class="col-lg-4 col-md-12 mb-4">
 
-              <img src="{%static 'Shop/img/foodbags/kienyeji.jpg'%}" class="img-fluid" alt="">
+                  <img src="{{item.item_image.url}}" enctype="multipart/form-data"  class="img-fluid" alt="">
 
-            </div>
-            <!--Grid column-->
-
-            <!--Grid column-->
-            <div class="col-lg-4 col-md-6 mb-4">
-
-              <img src="{%static 'Shop/img/foodbags/sow.jpg'%}" class="img-fluid" alt="">
-
-            </div>
-            <!--Grid column-->
-
-            <!--Grid column-->
-            <div class="col-lg-4 col-md-6 mb-4">
-
-              <img src="{%static 'Shop/img/foodbags/dairymeal.jpg'%}" class="img-fluid" alt="">
-
-            </div>
+                </div>
+            {% endfor %}
             <!--Grid column-->
 
           </div>

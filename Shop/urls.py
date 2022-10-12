@@ -10,6 +10,7 @@ urlpatterns = [
     path('product/<int:product_id>/',views.productview,name='product'),
     path('category/<str:category>/',views.categoryview.as_view(),name='categories'),
     path('checkout/',views.checkoutview,name='checkout'),
+    path('redeem/',views.redeem,name='redeem'),
     path('order-summary/',views.ordersummary,name='order-summary'),
     path('order-success/',views.ordersuccess,name='order-success'),
     path('add_to_cart/<int:product_id>/',views.add_to_cart,name='add_to_cart'),

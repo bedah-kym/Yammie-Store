@@ -25,7 +25,7 @@
         <div class="card shadow-lg " style="margin-left:5%;margin-right:5% ">
 
           <!--Card image-->
-          {% if user_profile.is_anon_agent == False  %}
+          {% if user_profile.is_anon_agent == False and user_profile.is_sales_agent == False %}
               <div class="view overlay text-center ">
                 <strong><h2 class="m-2 p-2">USER PROFILE</h2></strong>
               </div>
@@ -104,7 +104,7 @@
                         <th scope="col">commission paid</th>
                         <th scope="col">payment method</th>
                         <th scope="col"> withdrawn ?</th>
-                        <th scope="col">date ordered </th>  
+                        <th scope="col">date ordered </th>
                       {% endif %}
                     </tr>
                   </thead>

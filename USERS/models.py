@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from payment.code_generator import refcode
 from django.utils import timezone
-
+import os
 
 
 class profile(models.Model):
@@ -17,7 +17,7 @@ class profile(models.Model):
 
 
 class PromoCode(models.Model):
-    token = models.CharField(max_length=20)
+    token = models.CharField(default=os.environ.get('PromoCode'),max_length=20)
     owner = models.ForeignKey(profile,on_delete=models.CASCADE)
     created_at = models.DateTimeField(null=False)
 
@@ -26,22 +26,26 @@ class PromoCode(models.Model):
         if access_token == None:
             access_token = refcode()
         else:
-            delta = timezone.now() - access_token.created_at
-            minutes = (delta.total_seconds()//60)
-            hrs = minutes//60
-            days= hrs//24
-            print('minutes: ', minutes)
-            #print('created at:',access_token.created_at)
-            if minutes > 10: #change to 2 weeks in production
-                trash = PromoCode.objects.filter(owner=user_profile)
-                trash.delete()
-                new_token= PromoCode.objects.create(
-                    token = user_profile.user_name.username+'-'+refcode(),
-                	owner = user_profile,
-                	created_at = timezone.now(),
-                )
+            if user_profile.is_sales_agent:
+                return access_token
+            else:
+                delta = timezone.now() - access_token.created_at
+                minutes = (delta.total_seconds()//60)
+                hrs = minutes//60
+                days= hrs//24
+                print('minutes: ', minutes)
+                #print('created at:',access_token.created_at)
+                if minutes > 10: #change to 2 weeks in production
+                    trash = PromoCode.objects.filter(owner=user_profile)
+                    trash.delete()
+                    new_token= PromoCode.objects.create(
+                        token = user_profile.user_name.username+'-'+refcode(),
+                    	owner = user_profile,
+                    	created_at = timezone.now(),
+                    )
 
-                access_token=new_token
+                    access_token=new_token
+                    
         return access_token.token
 
 

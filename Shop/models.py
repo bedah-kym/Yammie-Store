@@ -51,6 +51,10 @@ class CartItem (models.Model):
     def get_item_total_price(self):
         return self.item.price * self.quantity
 
+    def get_item_discount_price(self):
+        return self.item.discount *self.quantity
+
+
 class Cart(models.Model):
     items = models.ManyToManyField(CartItem)
     owner = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -64,12 +68,19 @@ class Cart(models.Model):
     payment_method = models.CharField(max_length=20)
     agent_confirmed = models.BooleanField(default=False)
     user_phone = models.IntegerField(default=0)
+    discounted_price = models.IntegerField(default=0)
 
     def get_total_cart_price(self):
         total = 0
         for item in self.items.all():
             total += item.get_item_total_price()
         return total
+
+    def get_total_discount_price(self):
+        disc_total = 0
+        for item in self.items.all():
+            disc_total += item.get_item_discount_price()
+        return disc_total
 
     #@admin.display(ordering = 'order_date',description = "new orders")
     def get_new_orders(self):

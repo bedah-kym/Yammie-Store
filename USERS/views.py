@@ -53,7 +53,7 @@ def profileview(request):
     valid_code=''
     created=''
     orders=[]
-    if user_profile.is_anon_agent:
+    if user_profile.is_anon_agent or user_profile.is_sales_agent:
         try:
             orders = get_list_or_404(Cart,owner=user)
         except Http404:
@@ -61,7 +61,7 @@ def profileview(request):
         code = get_list_or_404(PromoCode,owner=user_profile)[0]
         valid_code =PromoCode.get_valid_code(user_profile,code)
         created=code.created_at
-    
+
     p_form = profileupadateform()
     if request.method == "POST":
         p_form = profileupadateform(request.POST,instance=user_profile)

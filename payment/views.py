@@ -9,6 +9,16 @@ from .models import payment_info
 
 @login_required
 def index (request):
+    """
+        assisted by the django-daraja package this function gets all the ordered carts a user has and gets the last ordered cart
+        then input from the form is passed along other variables from the selected cart. this variables will create a
+        new instace of payment_info.
+
+        after creating a new instance django_daraja pushes an stk push to safaricom which returns a json response,
+        if successfull the agent_code in the cart links back to the Agents profile and adds the commission earned to the
+        agent.
+    """
+
     form=payment_form()
     qs = Cart.objects.filter(owner=request.user,ordered=True)
     last = len(qs)-1
@@ -17,7 +27,7 @@ def index (request):
         form=payment_form(request.POST)
         if form.is_valid():
             cl = MpesaClient()
-            phone_number = request.POST.get('phone_number')
+            phone_number = form.cleaned_data['phone_number']
             amount = cart.total_price
             payment = cart.payment_method
             user = cart.owner
@@ -29,21 +39,19 @@ def index (request):
             transaction_desc = f'Pay yammie feeds for online order number{cart.ref_code}'
             callback_url='https://darajambili.herokuapp.com/c2b/confirmation'
             response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
+            #pays the agent commission earned if transaction is successfull
+            promocode = cart.agent_code
+            try:
+                qs = PromoCode.objects.get(token=promocode)
+                profile = qs.owner
+                discount = cart.get_total_discount_price()//2
+                profile.commission += discount
+                profile.save()
+                print('commission paid :',profile.commission)
+            except Http404 :
+                cart.ordered = False
+                return redirect('Shop:checkout')
 
-            return HttpResponse(response) #redirect to the success page
+            return HttpResponse(response,'Shop/order-succes.html') #redirect to the success page
 
     return render(request,'Shop/payment_form.html',{"form":form,})
-
-
-def index2(request):
-    cl = MpesaClient()
-    #token = cl.access_token()
-    # Use a Safaricom phone number that you have access to, for you to be able to view the prompt.
-    phone_number = '0748677515'
-    amount = 10
-    account_reference = 'reference'
-    transaction_desc = 'Description'
-    callback_url='https://darajambili.herokuapp.com/c2b/confirmation'
-    #callback_url = request.build_absolute_uri(reverse('mpesa_stk_push_callback'))
-    response = cl.stk_push(phone_number, amount, account_reference, transaction_desc, callback_url)
-    return HttpResponse(response)

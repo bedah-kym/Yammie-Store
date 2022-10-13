@@ -7,6 +7,7 @@ class ItemAdmin(admin.ModelAdmin):
 
 
 class CartAdmin(admin.ModelAdmin):
+
     fieldsets=[
     ('product',{"fields":['items']}),
     ('is the order paid ?',{"fields":['ordered']}),
@@ -19,6 +20,7 @@ class CartAdmin(admin.ModelAdmin):
     list_display = ['owner','order_date','ordered','payment_method','agent_confirmed']
     list_filter =  ['payment_method','order_date','ordered']
 
+    
 
 admin.site.register(Cart,CartAdmin)
 admin.site.register(Item,ItemAdmin)

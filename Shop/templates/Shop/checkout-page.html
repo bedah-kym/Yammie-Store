@@ -154,7 +154,7 @@
                   {% if promocode %}
                     <strong>{{cart.discounted_price}}/= KSHs</strong>
                   {% else %}
-                    <strong>{{cart.total_price}}/= KSHs</strong>
+                    <strong>{{cart.get_total_cart_price}}/= KSHs</strong>
                   {% endif %}
                 </li>
               </ul>

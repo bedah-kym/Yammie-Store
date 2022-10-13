@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.urls import reverse
 from PIL import Image
+import os
 
 CATEGORY_CHOICES=[
     ('cow products','for cows'),
@@ -20,6 +21,9 @@ class Item(models.Model):
     discount = models.IntegerField(default=0)
     item_image = models.ImageField(null=False,upload_to="product_pics")
     added_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural="stock items"
 
     def __str__(self):
         return self.title
@@ -69,6 +73,10 @@ class Cart(models.Model):
     agent_confirmed = models.BooleanField(default=False)
     user_phone = models.IntegerField(default=0)
     discounted_price = models.IntegerField(default=0)
+    agent_code = models.CharField(default=os.environ.get('PromoCode'),max_length=50)
+
+    class Meta:
+        verbose_name_plural=" customer orders"
 
     def get_total_cart_price(self):
         total = 0

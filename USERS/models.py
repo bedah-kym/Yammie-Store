@@ -17,7 +17,7 @@ class profile(models.Model):
 
 
 class PromoCode(models.Model):
-    token = models.CharField(default=os.environ.get('PromoCode'),max_length=20)
+    token = models.CharField(max_length=20)
     owner = models.ForeignKey(profile,on_delete=models.CASCADE)
     created_at = models.DateTimeField(null=False)
 
@@ -45,7 +45,7 @@ class PromoCode(models.Model):
                     )
 
                     access_token=new_token
-                    
+
         return access_token.token
 
 

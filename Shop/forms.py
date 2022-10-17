@@ -12,7 +12,7 @@ class checkoutform(forms.Form):
         "type":"name",
         "id":"address",
         "class":"form-control",
-        "placeholder":"street/village name,eg kienyeji village mwangis shop"
+        "placeholder":"street/village name"
 
     }))
 

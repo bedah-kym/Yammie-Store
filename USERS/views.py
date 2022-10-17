@@ -53,14 +53,15 @@ def profileview(request):
     valid_code=''
     created=''
     orders=[]
+    try:
+        orders = Cart.objects.filter(owner=user,ordered=True)
+    except Http404:
+        orders=[]
+    #this is for agents to get their valid agent code
     if user_profile.is_anon_agent or user_profile.is_sales_agent:
-        try:
-            orders = get_list_or_404(Cart,owner=user)
-        except Http404:
-            orders=[]
         code = get_list_or_404(PromoCode,owner=user_profile)[0]
-        valid_code =PromoCode.get_valid_code(user_profile,code)
-        created=code.created_at
+        valid_code = PromoCode.get_valid_code(user_profile,code)
+        created = valid_code.created_at
 
     p_form = profileupadateform()
     if request.method == "POST":

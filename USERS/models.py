@@ -12,6 +12,12 @@ class profile(models.Model):
     is_sales_agent = models.BooleanField(default=False)
     commission = models.IntegerField(default=0)
 
+    def get_valid_cellnumber(self):
+        """regex used to validate phone number input"""
+        number=self.cell_number
+        pass
+
+
     def __str__(self):
         return self.user_name.username
 
@@ -46,7 +52,7 @@ class PromoCode(models.Model):
 
                     access_token=new_token
 
-        return access_token.token
+        return access_token
 
 
     def __str__(self):

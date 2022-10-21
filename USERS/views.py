@@ -11,8 +11,6 @@ from payment.code_generator import refcode
 from django.contrib.auth.models import User
 
 
-
-
 def registerview(request):
 
     if request.method == "POST":

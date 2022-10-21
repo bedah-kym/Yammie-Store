@@ -16,7 +16,7 @@
     <!-- Your custom styles (optional) -->
     <link href="{% static 'Shop/css/style.min.css' %}" rel="stylesheet">
 
-    <a class="navbar-brand waves-effect p-2 m-2" href="{% url 'Shop:home' %}" target="_blank">
+    <a class="navbar-brand waves-effect p-2 m-2" href="{% url 'Shop:home' %}">
       <strong class="blue-text" style="margin:0 auto">YAMMIE FRESH LTD</strong> <!--add dissapearing aniamtion -->
     </a>
     <body>
@@ -66,6 +66,11 @@
                       <p>{{orders.count}} orders so far.</p>
                   </h6>
 
+                  <div class="card-body text-center">
+                      <button type="button" class="btn btn-outline primary"><a href="{% url 'users:unmake-agent' %}"><strong class="text">Un-make Agent</strong></a></button>
+                      <p class="mx-auto alert alert-primary">this will reset your commission to zero and de-register you as an agent</p>
+                  </div>
+
             {% endif %}
 
             {%for  message in messages %}
@@ -79,7 +84,9 @@
             {% endfor %}
           <!--Card content-->
 
+
         </div>
+
         <div class="view overlay">
           <form class="card-body"  method="POST">{% csrf_token %}
             <div class="md-form mb-5">
@@ -135,7 +142,7 @@
 
       <script type="text/javascript" src="{% static 'Shop/js/jquery-3.4.1.min.js' %}"></script>
       <!-- Bootstrap tooltips -->
-      <script type="text/javascript" src="{% static 'Shop/js/popper.min.js' %}"></script      <!-- Bootstrap core JavaScript -->
+      <script type="text/javascript" src="{% static 'Shop/js/popper.min.js' %}"></script>
       <script type="text/javascript" src="{% static 'Shop/js/bootstrap.min.js' %}"></script>
       <!-- MDB core JavaScript -->
       <script type="text/javascript" src="{% static 'Shop/js/mdb.min.js' %}"></script>

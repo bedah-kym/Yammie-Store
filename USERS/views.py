@@ -34,12 +34,32 @@ def makeagent(request):
         qs = get_object_or_404(profile,user_name=user,is_anon_agent=False)
     except Http404:
         return redirect('users:profile')
-    code=PromoCode.objects.create(
-        token = user_profile.user_name.username+'-'+refcode(),
-    	owner = request.user.profile,
-    	created_at = timezone.now(),
-    )
-    qs.is_anon_agent=True
+    if user_profile.cell_number >0:
+        code=PromoCode.objects.create(
+            token = user_profile.user_name.username+'-'+refcode(),
+        	owner = request.user.profile,
+        	created_at = timezone.now(),
+        )
+        qs.is_anon_agent=True
+        qs.save()
+    else:
+        messages.warning(request,"Please put in your active phone number")
+        return redirect('users:profile')
+
+    return redirect('users:profile')
+
+@login_required
+def unmakeagent(request):
+    user = request.user
+    user_profile=user.profile
+    try:
+        qs = get_object_or_404(profile,user_name=user,is_anon_agent=True)
+
+    except Http404:
+        return redirect('users:profile')
+
+    qs.is_anon_agent=False
+    qs.commission=0
     qs.save()
 
     return redirect('users:profile')

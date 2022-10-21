@@ -51,7 +51,7 @@
       <div class="container">
 
         <!-- Brand -->
-        <a class="navbar-brand waves-effect" href="#" target="_blank">
+        <a class="navbar-brand waves-effect" href="{% url 'Shop:home' %}">
           <strong class="blue-text">YAMMIE FRESH LTD</strong>
         </a>
 
@@ -72,12 +72,12 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link waves-effect" href="#" target="_blank">About us</a>
+              <a class="nav-link waves-effect" href="#" >About us</a>
             </li>
 
             {% if request.user.is_authenticated %}
                         <li class="nav-item">
-                          <a class="nav-link waves-effect" href="{% url 'users:logout' %}" target="_blank">
+                          <a class="nav-link waves-effect" href="{% url 'users:logout' %}">
                             logout</a>
                         </li>
 
@@ -86,7 +86,7 @@
                   <!-- Right -->
                   <ul class="navbar-nav nav-flex-icons">
                     <li class="nav-item">
-                      <a href="{% url 'users:profile' %}" class="nav-link waves-effect" target="_blank">
+                      <a href="{% url 'users:profile' %}" class="nav-link waves-effect" >
                         <i class="far fa-envelope"></i>
                       </a>
                     </li>
@@ -111,12 +111,11 @@
                   </ul>
                   {% else %}
                       <li class="nav-item">
-                        <a class="nav-link waves-effect" href="{% url 'users:login' %}"
-                          target="_blank">Login</a>
+                        <a class="nav-link waves-effect" href="{% url 'users:login' %}">Login</a>
                       </li>
 
                       <li class="nav-item">
-                        <a class="nav-link waves-effect" href="{% url 'users:register' %}" target="_blank">
+                        <a class="nav-link waves-effect" href="{% url 'users:register' %}">
                           register</a>
                       </li>
                  {% endif %}
@@ -144,10 +143,10 @@
         </a>
       </div>
       -->
-
-      <hr class="my-4">
-        <a href="{% url 'Shop:agent-info-page' %}"><strong class="text">become our agent</strong></a>
-
+      {% if request.user.profile.is_anon_agent == False %}
+        <hr class="my-4">
+          <a href="{% url 'Shop:agent-info-page' %}"><strong class="text">become our agent</strong></a>
+      {% endif %}
       <!-- Social icons -->
       <div class="pb-4">
         <a href="https://web.facebook.com/yammiefeeds" target="_blank">

@@ -32,18 +32,22 @@ def productview(request,product_id):
         the product view does a nice trick of using the products category to get some related_items
         for the template if the product dosent have related items we just get 3 random items
     """
-    try:
-        product = get_object_or_404(Item,pk=product_id)
-    except Http404 :
-        return redirect('Shop:home')
-    #product= Item.objects.get(pk=product_id)
-    cart,created = Cart.objects.get_or_create(owner=request.user,ordered=False)
-    items = cart.items.filter(user=request.user,ordered=False)
-    try:
-        related_items = Item.objects.filter(category=product.category)[:3]
-    except Http404:
-        related_items=Item.objects.all()[:3]
-    total = items.count()
+    if request.user.profile.cell_number >0 :
+        try:
+            product = get_object_or_404(Item,pk=product_id)
+        except Http404 :
+            return redirect('Shop:home')
+        #product= Item.objects.get(pk=product_id)
+        cart,created = Cart.objects.get_or_create(owner=request.user,ordered=False)
+        items = cart.items.filter(user=request.user,ordered=False)
+        try:
+            related_items = Item.objects.filter(category=product.category)[:3]
+        except Http404:
+            related_items=Item.objects.all()[:3]
+        total = items.count()
+    else:
+        messages.warning(request,"Please put in your active phone number")
+        return redirect('users:profile')
     #print(request.headers)
 
     return render(request,'Shop/product-page.html',{"related_items":related_items,"product":product,"cart_total":total})

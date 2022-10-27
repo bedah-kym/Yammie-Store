@@ -34,7 +34,7 @@ def makeagent(request):
         qs = get_object_or_404(profile,user_name=user,is_anon_agent=False)
     except Http404:
         return redirect('users:profile')
-    if user_profile.cell_number >0:
+    if user_profile.cell_number >0: #use a valid check
         code=PromoCode.objects.create(
             token = user_profile.user_name.username+'-'+refcode(),
         	owner = request.user.profile,
@@ -61,6 +61,7 @@ def unmakeagent(request):
     qs.is_anon_agent=False
     qs.commission=0
     qs.save()
+    messages.info(request,"you are now a regular user")
 
     return redirect('users:profile')
 

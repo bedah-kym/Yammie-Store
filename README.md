@@ -10,7 +10,7 @@ It has regular buy sell features of a common e-commerce site ie:
     order success page : gives you a unique refference code if order is successfull 
   </p>
  <hr>
- the site has an agent system which works by registering regular users annonymous  agents, giving them a profile and agent code<br>
+ the site has an agent system which works by registering regular users to annonymous  agents, giving them a profile and agent code<br>
  this code is what the agent uses when they order for a client on the site. The agent goes and gets clients to shop on the site for animal feeds,<br>
  the agent-code is used as a promocode which earns a commission to the agent.
  <hr>

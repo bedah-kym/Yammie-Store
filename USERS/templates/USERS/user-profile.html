@@ -16,7 +16,7 @@
     <!-- Your custom styles (optional) -->
     <link href="{% static 'Shop/css/style.min.css' %}" rel="stylesheet">
 
-    <a class="navbar-brand waves-effect p-2 m-2" href="{% url 'Shop:home' %}" target="_blank">
+    <a class="navbar-brand waves-effect p-2 m-2" href="{% url 'Shop:home' %}">
       <strong class="blue-text" style="margin:0 auto">YAMMIE FRESH LTD</strong> <!--add dissapearing aniamtion -->
     </a>
     <body>
@@ -25,27 +25,68 @@
         <div class="card shadow-lg " style="margin-left:5%;margin-right:5% ">
 
           <!--Card image-->
-          <div class="view overlay text-center ">
-            <strong><h2 class="m-2 p-2">MY PROFILE</h2></strong>
-          </div>
-          <!--Card image-->
+          {% if user_profile.is_anon_agent == False and user_profile.is_sales_agent == False %}
+              <div class="shadow-sm view overlay text-center"style="background-color: darkturquoise;">
+                <strong><h2 class="m-2 p-2">USER PROFILE</h2></strong>
+              </div>
+            <!--Card image-->
 
+              <div class="card-body text-center">
+                <h6 style="background-color: lavenderblush;padding:5px;">
+                    <p class="pt-2"><strong>{{user.username}}</strong></p>
+                    <p>
+                      <img src="{% static 'Shop/img/Tilda_Icons_2web_phone.svg' %}"  class="card-img-top" style="margin:0 auto ;background-size:contain; background-repeat:no-repeat; max-width:50px;max-height:50px;" alt="">
+                      +254 {{user_profile.cell_number}}
+                    </p>
+                    <hr>
+                    <p>{{orders.count}} orders so far.</p>
+                </h6>
+
+
+            {% else %}
+                <div class="shadow-sm view overlay text-center"style="background-color: antiquewhite;">
+                  <strong><h2 class="m-2 p-2">AGENT PROFILE</h2></strong>
+                </div>
+
+                <div class="card-body text-center">
+                  <h6 style="background-color: lavenderblush;padding:5px;">
+                      <p class="pt-2"><strong>{{user.username}}</strong></p>
+                      <p>
+                        <img src="{% static 'Shop/img/Tilda_Icons_2web_phone.svg' %}"  class="card-img-top" style="margin:0 auto ;background-size:contain; background-repeat:no-repeat; max-width:50px;max-height:50px;" alt="">
+                        +254 {{user_profile.cell_number}}
+                      </p>
+                      <hr>
+                      <p>active agent reference code [<strong>{{code}}</strong>]</p>
+                      <p>code will expire two weeks from {{created}} </p>
+                      <hr>
+                      <img src="{% static 'Shop/img/wallet.gif' %}"  class="card-img-top" style="margin:0 auto ;background-size:contain; background-repeat:no-repeat; max-width:70px;max-height:70px;" alt="">
+                      <p class="pt-2">commission earned Kshs {{user_profile.commission}}/=</p>
+
+                      <hr>
+                      <p>{{orders.count}} orders so far.</p>
+                  </h6>
+
+                  <div class="card-body text-center">
+                      <button type="button" class="btn btn-outline primary"><a href="{% url 'users:unmake-agent' %}"><strong class="text">Un-make Agent</strong></a></button>
+                      <p class="mx-auto alert alert-primary">this will reset your commission to zero and de-register you as an agent</p>
+                  </div>
+
+            {% endif %}
+
+            {%for  message in messages %}
+                <div class="mx-auto alert alert-{{message.tags}} alert-dissmissible fade show col-lg-6 m-4 "role="alert" style="min-width:100px">
+                    {{message}}
+                    <button type="button" class="close"data-dismiss="alert"aria-label="close">
+                          <span aria-hidden="true">&times;</span>
+                    </button>
+
+                </div>
+            {% endfor %}
           <!--Card content-->
-          <div class="card-body text-center">
-            <!--Category & Title-->
 
-            <h5>
-              <strong>
-                <p>{{user}}</p>
-                <p>{{user.email}}</p>
-                <p>+254 {{user_profile.cell_number}}</p>
-              </strong>
-            </h5>
-
-
-          <!--Card content-->
 
         </div>
+
         <div class="view overlay">
           <form class="card-body"  method="POST">{% csrf_token %}
             <div class="md-form mb-5">
@@ -65,12 +106,12 @@
               <table class="table">
                   <thead>
                     <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Cart number</th>
-                      <th scope="col">Price paid</th>
-                      <th scope="col">payment method</th>
-                      <th scope="col">has agent confirmed ?</th>
-                      <th scope="col">date ordered </th>
+                        <th scope="col">#</th>
+                        <th scope="col">Cart number</th>
+                        <th scope="col">Price paid</th>
+                        <th scope="col">payment method</th>
+                        <th scope="col">has agent confirmed ?</th>
+                        <th scope="col">date ordered </th>
                     </tr>
                   </thead>
                   <tbody>
@@ -101,7 +142,7 @@
 
       <script type="text/javascript" src="{% static 'Shop/js/jquery-3.4.1.min.js' %}"></script>
       <!-- Bootstrap tooltips -->
-      <script type="text/javascript" src="{% static 'Shop/js/popper.min.js' %}"></script      <!-- Bootstrap core JavaScript -->
+      <script type="text/javascript" src="{% static 'Shop/js/popper.min.js' %}"></script>
       <script type="text/javascript" src="{% static 'Shop/js/bootstrap.min.js' %}"></script>
       <!-- MDB core JavaScript -->
       <script type="text/javascript" src="{% static 'Shop/js/mdb.min.js' %}"></script>

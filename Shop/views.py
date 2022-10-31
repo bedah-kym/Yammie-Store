@@ -10,31 +10,57 @@ from django.utils import timezone
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic import ListView,DetailView,CreateView,DeleteView
-from .forms import checkoutform
+from .forms import checkoutform,promocodeform
 from payment.code_generator import refcode
+from USERS.models import PromoCode,profile
+
+"""
+    due to time constrains and sheer amount of testing and work needed i forgot to make template tags for the cart icon and
+    ended up using the default method of using the database in every view this might be expensive but hopefully i will fix
+"""
 
 class homeview(ListView):
     model = Item
     template_name = 'Shop/home-page.html'
     context_object_name = 'products'
     paginate_by=4
+    ordering=['-added_on']
 
 @login_required
 def productview(request,product_id):
-    try:
-        product = get_object_or_404(Item,pk=product_id)
-    except Http404 :
-        return redirect('Shop:home')
-    #product= Item.objects.get(pk=product_id)
-    cart,created = Cart.objects.get_or_create(owner=request.user,ordered=False)
-    items = cart.items.filter(user=request.user,ordered=False)
-    total = items.count()
+    """
+        the product view does a nice trick of using the products category to get some related_items
+        for the template if the product dosent have related items we just get 3 random items
+    """
+    if request.user.profile.cell_number >0 :
+        try:
+            product = get_object_or_404(Item,pk=product_id)
+        except Http404 :
+            return redirect('Shop:home')
+        #product= Item.objects.get(pk=product_id)
+        cart,created = Cart.objects.get_or_create(owner=request.user,ordered=False)
+        items = cart.items.filter(user=request.user,ordered=False)
+        try:
+            related_items = Item.objects.filter(category=product.category)[:3]
+        except Http404:
+            related_items=Item.objects.all()[:3]
+        total = items.count()
+    else:
+        messages.warning(request,"Please put in your active phone number")
+        return redirect('users:profile')
     #print(request.headers)
 
-    return render(request,'Shop/product-page.html',{"product":product,"cart_total":total})
+    return render(request,'Shop/product-page.html',{"related_items":related_items,"product":product,"cart_total":total})
 
 @login_required
 def checkoutview(request):
+    """
+        here we get the cart and get the location info and payment method, if you have a promocode after you redeem
+        it will redirect back here with the cart discounted_price to be used as total_price .
+
+        this view redirects to payment form if mpesa is selected otherwise goes to ordersuccess page.
+        if you dont redeem it will calc the regular prices and then redirect
+    """
     try:
         cart = get_list_or_404(Cart,owner=request.user,ordered=False)[0]
     except Http404 :
@@ -42,17 +68,21 @@ def checkoutview(request):
     items = cart.items.filter(user=request.user,ordered=False)
     total = items.count()
     form = checkoutform()
+    pform = promocodeform()
     if request.method == "POST":
         form = checkoutform(request.POST)
         if form.is_valid(): #DO custom validations
-            cart.street_name = request.POST.get('street_name')
-            cart.county = request.POST.get('sub_county')
-            cart.location = request.POST.get('ward')
-            payment = request.POST.get('payment_options')
+            cart.street_name = form.cleaned_data['street_name']
+            cart.county = form.cleaned_data['sub_county']
+            cart.location = form.cleaned_data['ward']
+            payment = form.cleaned_data['payment_options']
             cart.order_date = timezone.now()
-            cart.user_phone = request.user.profile.cell_number
+            cart.user_phone = request.user.profile.cell_number#error handling incase user has no cell number
             cart.payment_method = payment
-            cart.total_price = cart.get_total_cart_price()
+            if cart.discounted_price > 0:
+                cart.total_price = cart.discounted_price
+            else:
+                cart.total_price = cart.get_total_cart_price()
             for item in items: # this here loops through the carts items making them ordered=true
                 item.ordered = True
                 item.save()
@@ -61,18 +91,79 @@ def checkoutview(request):
             cart.save()
             if payment == 'LipanaMpesa':
                 return HttpResponseRedirect(reverse('index'))
-            #cart.user_phone = request.user.username
+            else:
+                promocode = cart.agent_code
+                try:
+                    qs = PromoCode.objects.get(token=promocode)
+                    profile = qs.owner
+                    discount = cart.get_total_discount_price()//2
+                    profile.commission += discount
+                    profile.save()
+                    print('commission paid :',profile.commission)
+                except Http404 :
+                    cart.ordered = False
+                    return redirect('Shop:checkout')
+
             return redirect('Shop:order-success')# redirect to a succes page whih will tell the user to wait for agent confirmation call
+
         return redirect('Shop:checkout')
     context= {
         "items":items,
         "cart_total":total,
         "cart":cart,
         "form":form,
+        "pform":pform
 
     }
 
     return render(request,'Shop/checkout-page.html',context)
+
+@login_required
+def redeem(request):
+    """
+        this function gets the first cart that a user has not ordered,generates the checkoutform, gets the promocode
+        from the form in the template and goes to the database to verify if the code is valid
+
+        if  valid it will assign the refcode to the cart and calculate discount and assign it to
+        the cart to be used in the checkoutview
+    """
+    try:
+        cart = get_list_or_404(Cart,owner=request.user,ordered=False)[0]
+    except Http404 :
+        return redirect('Shop:home')
+    items = cart.items.filter(user=request.user,ordered=False)
+    total = items.count()
+    form = checkoutform()
+    discount= 0
+    if request.method == 'POST':
+        pform = promocodeform(request.POST)
+        if pform.is_valid():
+            promocode = pform.cleaned_data['p_code']
+            try:
+                code = get_object_or_404(PromoCode,token=promocode)
+            except Http404:
+                code ="invalid"
+                messages.warning(request,'invalid promocode, please input the correct/updated agent refcode !')
+                return redirect('Shop:checkout')
+            discount = cart.get_total_discount_price()//2
+            cart.discounted_price = cart.get_total_cart_price()-discount
+            cart.agent_code = promocode
+            cart.save()
+            #print('discount',discount,'comm',agent,cart.discounted_price)
+
+    context= {
+        "items":items,
+        "cart_total":total,
+        "cart":cart,
+        "form":form,
+        "pform":pform,
+        "promocode":promocode,
+        "discount":discount
+
+    }
+
+    return render(request,'Shop/checkout-page.html',context)
+
 
 @login_required
 def ordersummary(request):
@@ -140,7 +231,7 @@ def add_to_cart(request,product_id):
                 cart.items.add(cart_item)
                 messages.info(request,f'{cart_item.item.title} has been added to your cart')
         else: # if the user has no cart make one with date and user and ordered = false the add the cart item we made
-            print('created a new cart')
+            #print('created a new cart')
             new_cart = Cart.objects.create(
                 owner=request.user,
                 ordered=False,

@@ -12,7 +12,7 @@ class checkoutform(forms.Form):
         "type":"name",
         "id":"address",
         "class":"form-control",
-        "placeholder":"street/village name,eg kienyeji village mwangis shop"
+        "placeholder":"street/village name"
 
     }))
 
@@ -30,3 +30,15 @@ class checkoutform(forms.Form):
 
     }))
     payment_options = forms.ChoiceField(widget=forms.RadioSelect,choices=PAYMENT_CHOICES)
+
+
+
+class promocodeform(forms.Form):
+    p_code = forms.CharField(widget=forms.TextInput(attrs={
+        "type":"text",
+        "class":"form-control",
+        "placeholder" : "Promo code ",
+        "aria-label": "Recipient's username",
+        "aria-describedby": "basic-addon2"
+
+    }))

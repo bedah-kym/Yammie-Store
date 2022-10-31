@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 from django.urls import reverse
 from PIL import Image
+import os
 
 CATEGORY_CHOICES=[
     ('cow products','for cows'),
@@ -19,7 +20,10 @@ class Item(models.Model):
     in_stock = models.BooleanField(default=True)
     discount = models.IntegerField(default=0)
     item_image = models.ImageField(null=False,upload_to="product_pics")
+    added_on = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        verbose_name_plural="stock items"
 
     def __str__(self):
         return self.title
@@ -29,7 +33,7 @@ class Item(models.Model):
 
     def get_remove_from_cart_url(self):
         return reverse('Shop:remove_from_cart', kwargs={'product_id' : self.pk})
-
+"""
     def save(self):
         super().save()
         img = Image.open(self.item_image.path)
@@ -37,7 +41,7 @@ class Item(models.Model):
             outputsize=(200,200)
             img.thumbnail(outputsize)
             img.save(self.item_image.path)
-
+"""
 
 
 class CartItem (models.Model):
@@ -50,6 +54,10 @@ class CartItem (models.Model):
         return f"{self.quantity} bag(s) of {self.item.weight}kg {self.item}"
     def get_item_total_price(self):
         return self.item.price * self.quantity
+
+    def get_item_discount_price(self):
+        return self.item.discount *self.quantity
+
 
 class Cart(models.Model):
     items = models.ManyToManyField(CartItem)
@@ -64,12 +72,23 @@ class Cart(models.Model):
     payment_method = models.CharField(max_length=20)
     agent_confirmed = models.BooleanField(default=False)
     user_phone = models.IntegerField(default=0)
+    discounted_price = models.IntegerField(default=0)
+    agent_code = models.CharField(default=os.environ.get('PromoCode'),max_length=50)
+
+    class Meta:
+        verbose_name_plural=" customer orders"
 
     def get_total_cart_price(self):
         total = 0
         for item in self.items.all():
             total += item.get_item_total_price()
         return total
+
+    def get_total_discount_price(self):
+        disc_total = 0
+        for item in self.items.all():
+            disc_total += item.get_item_discount_price()
+        return disc_total
 
     #@admin.display(ordering = 'order_date',description = "new orders")
     def get_new_orders(self):

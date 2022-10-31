@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.views.generic import TemplateView
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
@@ -10,6 +11,8 @@ urlpatterns = [
     path('product/<int:product_id>/',views.productview,name='product'),
     path('category/<str:category>/',views.categoryview.as_view(),name='categories'),
     path('checkout/',views.checkoutview,name='checkout'),
+    path('agent_info/',TemplateView.as_view(template_name="Shop/agent_info.html"),name='agent-info-page'),
+    path('redeem/',views.redeem,name='redeem'),
     path('order-summary/',views.ordersummary,name='order-summary'),
     path('order-success/',views.ordersuccess,name='order-success'),
     path('add_to_cart/<int:product_id>/',views.add_to_cart,name='add_to_cart'),

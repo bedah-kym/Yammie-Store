@@ -20,7 +20,7 @@ def registerview(request):
             form.save()
             messages.warning(request,f'WELCOME {username} please add your phone number to continue')
             return redirect('users:profile')
-        print(form.errors)
+        #print(form.errors)
         messages.warning(request,form.errors)
         return redirect('users:register')
     else:
@@ -90,7 +90,7 @@ def profileview(request):
             p_form.save()
             return redirect('users:profile')
         else:
-            messages.warning(request,"invalid number;the number should have nine digits")
+            messages.info(request,"Sorry! number should have nine digits")
             return redirect('users:profile')
 
     context= {

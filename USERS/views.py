@@ -20,10 +20,11 @@ def registerview(request):
             form.save()
             messages.warning(request,f'WELCOME {username} please add your phone number to continue')
             return redirect('users:profile')
-        messages.warning(request,'invalid credentials')
+        print(form.errors)
+        messages.warning(request,form.errors)
         return redirect('users:register')
     else:
-        form = registration_form()
+        form = registration_form(request.POST)
     return render(request,'USERS/register.html',{'form':form})
 
 @login_required
@@ -53,7 +54,7 @@ def unmakeagent(request):
     user = request.user
     user_profile=user.profile
     try:
-        qs = get_object_or_404(profile,user_name=user,is_anon_agent=True)
+        qs = get_object_or_404(profile,user_name=user,is_anon_agent=True,is_sales_agent=False)
 
     except Http404:
         return redirect('users:profile')
@@ -89,6 +90,7 @@ def profileview(request):
             p_form.save()
             return redirect('users:profile')
         else:
+            messages.warning(request,"invalid number;the number should have nine digits")
             return redirect('users:profile')
 
     context= {

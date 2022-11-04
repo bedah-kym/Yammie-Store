@@ -4,18 +4,12 @@ from payment.code_generator import refcode
 from django.utils import timezone
 import os
 
-
 class profile(models.Model):
     user_name = models.OneToOneField(User,on_delete=models.CASCADE)
     cell_number = models.IntegerField(default=0)
     is_anon_agent = models.BooleanField(default=False)
     is_sales_agent = models.BooleanField(default=False)
     commission = models.IntegerField(default=0)
-
-    def get_valid_cellnumber(self):
-        """regex used to validate phone number input"""
-        number=self.cell_number
-        pass
 
 
     def __str__(self):

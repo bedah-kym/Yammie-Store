@@ -11,4 +11,5 @@ urlpatterns = [
     path('make-agent/',views.makeagent,name='make-agent'),
     path('unmake-agent/',views.unmakeagent,name='unmake-agent'),
     path('profile/',views.profileview,name='profile'),
+    path('profile-image-update/',views.profilepicupdate,name='profile-image-update'),
 ]

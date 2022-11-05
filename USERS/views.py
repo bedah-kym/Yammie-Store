@@ -1,7 +1,8 @@
 from django.shortcuts import render,redirect,get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_list_or_404
-from .forms import registration_form,profileupadateform
+from .forms import registration_form,profileupadateform,profileimageupdateform
 from django.contrib import messages
 from Shop.models import Cart
 from django.utils import timezone
@@ -82,8 +83,9 @@ def profileview(request):
         code = get_list_or_404(PromoCode,owner=user_profile)[0]
         valid_code = PromoCode.get_valid_code(user_profile,code)
         created = valid_code.created_at
-
-    p_form = profileupadateform()
+        #phone numberupdate form
+    p_form = profileupadateform(request.POST)
+    dp_form = profileimageupdateform()
     if request.method == "POST":
         p_form = profileupadateform(request.POST,instance=user_profile)
         if p_form.is_valid():
@@ -93,12 +95,28 @@ def profileview(request):
             messages.info(request,"Sorry! number should have nine digits")
             return redirect('users:profile')
 
+
     context= {
         'user_profile':user_profile,
         'user' :user,
         'orders':orders,
+        'dp_form':dp_form,
         'p_form':p_form,
         'code':valid_code,
         'created':created
     }
     return render(request,'USERS/user-profile.html',context)
+
+def profilepicupdate(request):
+    user= request.user
+    user_profile=request.user.profile
+    dp_form = profileimageupdateform()
+    if request.method == "POST" :
+        print(request.FILES)
+        dp_form = profileimageupdateform(request.POST,request.FILES,instance=user_profile)
+        if dp_form.is_valid():
+            dp_form.save()
+            return HttpResponseRedirect('/users/profile/')
+        else:
+            messages.info(request,dp_form.errors)
+            return redirect('users:profile')

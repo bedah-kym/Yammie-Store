@@ -59,6 +59,13 @@ class profileupadateform(forms.ModelForm):
         "placeholder":"",
 
     }))
+
     class Meta:
         model= profile
         fields=['cell_number']
+
+class profileimageupdateform(forms.ModelForm):
+
+    class Meta:
+        model= profile
+        fields=['profile_image']

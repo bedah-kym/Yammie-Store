@@ -29,11 +29,26 @@
               <div class="shadow-sm view overlay text-center"style="background-color: darkturquoise;">
                 <strong><h2 class="m-2 p-2">USER PROFILE</h2></strong>
               </div>
+
             <!--Card image-->
 
               <div class="card-body text-center">
                 <h6 style="background-color: lavenderblush;padding:5px;">
                     <p class="pt-2"><strong>{{user.username}}</strong></p>
+                    <div class="">
+                      <a href="{{user.profile.profile_image.url}}">
+                        <img src="{{user.profile.profile_image.url}}" enctype="multipart/form-data" class="card-img-top rounded-circle"style="max-width:200px;max-height:200px" >
+                      </a>
+                      <form class="" enctype="multipart/form-data" action="{% url 'users:profile-image-update' %}" method="POST">{%csrf_token%}
+                        <fieldset>
+                          <div class="md-form mb-5">
+                            {{dp_form.profile_image}}
+                          </div>
+                            <button class="btn btn-outline-danger"type="submit" name="">update profile pic</button>
+                        </fieldset>
+
+                      </form>
+                    </div>
                     <p>
                       <img src="{% static 'Shop/img/Tilda_Icons_2web_phone.svg' %}"  class="card-img-top" style="margin:0 auto ;background-size:contain; background-repeat:no-repeat; max-width:50px;max-height:50px;" alt="">
                       +254 {{user_profile.cell_number}}
@@ -50,7 +65,25 @@
 
                 <div class="card-body text-center">
                   <h6 style="background-color: lavenderblush;padding:5px;">
-                      <p class="pt-2"><strong>{{user.username}}</strong></p>
+
+                      <p class="pt-2"><strong>{{user.username}}</strong>
+                          <div class="">
+                            <a href="{{user.profile.profile_image.url}}">
+                              <img src="{{user.profile.profile_image.url}}" enctype="multipart/form-data" class="card-img-top rounded-circle"style="max-width:200px;max-height:200px" >
+                            </a>
+                            <form class="" enctype="multipart/form-data" action="{% url 'users:profile-image-update' %}" method="POST">{%csrf_token%}
+                              <fieldset>
+                                <div class="md-form mb-5">
+                                  {{dp_form.profile_image}}
+                                </div>
+                                  <button class="btn btn-outline-danger"type="submit" name="">update profile pic</button>
+                              </fieldset>
+
+                            </form>
+
+                          </div>
+                      </p>
+
                       <p>
                         <img src="{% static 'Shop/img/Tilda_Icons_2web_phone.svg' %}"  class="card-img-top" style="margin:0 auto ;background-size:contain; background-repeat:no-repeat; max-width:50px;max-height:50px;" alt="">
                          {% if messages%}
@@ -94,16 +127,16 @@
 
                   </div>
               {% endfor %}
-            
+
           <!--Card content-->
 
 
         </div>
 
         <div class="view overlay">
-          <form class="card-body"  method="POST">{% csrf_token %}
+          <form class="card-body" action="{% url 'users:profile' %}" method="POST">{% csrf_token %}
             <div class="md-form mb-5">
-              {{p_form}}
+              {{p_form.cell_number}}
             </div>
 
             <button class="btn btn-secondary"type="submit" name="">update phone number</button>

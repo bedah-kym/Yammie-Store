@@ -10,7 +10,7 @@ class profile(models.Model):
     is_anon_agent = models.BooleanField(default=False)
     is_sales_agent = models.BooleanField(default=False)
     commission = models.IntegerField(default=0)
-
+    profile_image = models.ImageField(default="images.png",upload_to="profile_pics")
 
     def __str__(self):
         return self.user_name.username

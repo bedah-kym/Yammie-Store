@@ -90,9 +90,12 @@ class Cart(models.Model):
             disc_total += item.get_item_discount_price()
         return disc_total
 
-    #@admin.display(ordering = 'order_date',description = "new orders")
-    def get_new_orders(self):
-        return self.items.filter(agent_confirmed=False)
+    def is_empty(self):
+        x= self.items.count()
+        if x >= 1:
+            return False
+        else:
+            return True
 
     def __str__(self):
         return str(self.ref_code)

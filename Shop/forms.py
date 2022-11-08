@@ -1,5 +1,7 @@
 from django import forms
 from django.db import models
+from .validators import locationvalidation
+
 
 PAYMENT_CHOICES=[
     ('LipanaMpesa','lipa na mpesa'),
@@ -8,6 +10,7 @@ PAYMENT_CHOICES=[
 
 
 class checkoutform(forms.Form):
+    #l1=locationvalidation('street_name')
     street_name = forms.CharField(widget=forms.TextInput(attrs={
         "type":"name",
         "id":"address",

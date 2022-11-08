@@ -69,44 +69,49 @@ def checkoutview(request):
     total = items.count()
     form = checkoutform()
     pform = promocodeform()
-    if request.method == "POST":
-        form = checkoutform(request.POST)
-        if form.is_valid(): #DO custom validations
-            cart.street_name = form.cleaned_data['street_name']
-            cart.county = form.cleaned_data['sub_county']
-            cart.location = form.cleaned_data['ward']
-            payment = form.cleaned_data['payment_options']
-            cart.order_date = timezone.now()
-            cart.user_phone = request.user.profile.cell_number#error handling incase user has no cell number
-            cart.payment_method = payment
-            if cart.discounted_price > 0:
-                cart.total_price = cart.discounted_price
-            else:
-                cart.total_price = cart.get_total_cart_price()
-            for item in items: # this here loops through the carts items making them ordered=true
-                item.ordered = True
-                item.save()
-            cart.ref_code = refcode()
-            cart.ordered = True
-            cart.save()
-            if payment == 'LipanaMpesa':
-                return HttpResponseRedirect(reverse('index'))
-            else:
-                promocode = cart.agent_code
-                try:
-                    qs = PromoCode.objects.get(token=promocode)
-                    profile = qs.owner
-                    discount = cart.get_total_discount_price()//2
-                    profile.commission += discount
-                    profile.save()
-                    print('commission paid :',profile.commission)
-                except Http404 :
-                    cart.ordered = False
-                    return redirect('Shop:checkout')
+    if cart.is_empty() == False:
 
-            return redirect('Shop:order-success')# redirect to a succes page whih will tell the user to wait for agent confirmation call
+        if request.method == "POST":
+            form = checkoutform(request.POST)
+            if form.is_valid(): #DO custom validations
+                cart.street_name = form.cleaned_data['street_name']
+                cart.county = form.cleaned_data['sub_county']
+                cart.location = form.cleaned_data['ward']
+                payment = form.cleaned_data['payment_options']
+                cart.order_date = timezone.now()
+                cart.user_phone = request.user.profile.cell_number#error handling incase user has no cell number
+                cart.payment_method = payment
+                if cart.discounted_price > 0:
+                    cart.total_price = cart.discounted_price
+                else:
+                    cart.total_price = cart.get_total_cart_price()
+                for item in items: # this here loops through the carts items making them ordered=true
+                    item.ordered = True
+                    item.save()
+                cart.ref_code = refcode()
+                cart.ordered = True
+                cart.save()
+                if payment == 'LipanaMpesa':
+                    return HttpResponseRedirect(reverse('index'))
+                else:
+                    promocode = cart.agent_code
+                    try:
+                        qs = PromoCode.objects.get(token=promocode)
+                        profile = qs.owner
+                        discount = cart.get_total_discount_price()//2
+                        profile.commission += discount
+                        profile.save()
+                        print('commission paid :',profile.commission)
+                    except Http404 :
+                        cart.ordered = False
+                        return redirect('Shop:checkout')
 
-        return redirect('Shop:checkout')
+                return redirect('Shop:order-success')# redirect to a succes page whih will tell the user to wait for agent confirmation call
+
+            return redirect('Shop:checkout')
+    else:
+        #messages.info(request,'sorry your cart is empty')
+        return redirect('Shop:home')
     context= {
         "items":items,
         "cart_total":total,

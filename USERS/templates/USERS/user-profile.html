@@ -1,4 +1,5 @@
 {% load static %}
+{% load humanize %}
   <!DOCTYPE html>
   <html lang="en">
 
@@ -168,7 +169,7 @@
                           <td>{{order.total_price}}/=</td>
                           <td>{{order.payment_method}}</td>
                           <td>{{order.agent_confirmed}}</td>
-                          <td>{{order.order_date}}</td>
+                          <td>{{order.order_date|naturaltime}}</td>
 
                         </tr>
                     {% endfor %}

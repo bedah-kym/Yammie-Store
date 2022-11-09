@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect,render,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_list_or_404
-from .models import Item,CartItem,Cart
+from .models import Item,CartItem,Cart,Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse
 from django.http import Http404
@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic import ListView,DetailView,CreateView,DeleteView
-from .forms import checkoutform,promocodeform
+from .forms import checkoutform,promocodeform,commentform
 from payment.code_generator import refcode
 from USERS.models import PromoCode,profile
 
@@ -48,9 +48,67 @@ def productview(request,product_id):
     else:
         messages.warning(request,"Please put in your active phone number")
         return redirect('users:profile')
-    #print(request.headers)
 
-    return render(request,'Shop/product-page.html',{"related_items":related_items,"product":product,"cart_total":total})
+    comm_form = commentform()
+    try:
+        comments = Comment.objects.filter(product=product).order_by('-created_at')[:4]
+
+    except Http404:
+        comments= []
+    try:
+        mycomment = Comment.objects.filter(product=product,owner=request.user).order_by('-created_at')[:1]
+    except Http404:
+        mycomment= []
+    show=False
+    user=request.user
+    if Comment.can_comment(request,product):
+        show=True
+
+        if request.method == "POST":
+            comm_form = commentform(request.POST)
+            if comm_form.is_valid():
+                comment = comm_form.cleaned_data['text']
+                if len(comment)<=300:
+                    Comment.objects.create(text=comment,product=product,owner=request.user,created_at=timezone.now())
+                    #comm_form.save()
+                    return redirect(reverse("Shop:product",kwargs={"product_id":product.id}))
+                else:
+                    comm_form = commentform()
+                    messages.warning(request,"sorry too many words in your comment !")
+            else:
+                comm_form = commentform(request.POST)
+                messages.warning(request,comm_form.errors)
+                #messages.warning(request,"sorry too many words in your comment use less than 300 words!")
+    
+
+    ctx= {
+        "related_items":related_items,
+        "product":product,
+        "cart_total":total,
+        "comments":comments,
+        "comment_form":comm_form,
+        "mycomment":mycomment,
+        "show":show
+
+    }
+
+
+    return render(request,'Shop/product-page.html',ctx)
+
+@login_required
+def deletecomment(request,product_id):
+    #find specific product
+    product = get_object_or_404(Item,pk=product_id)
+    #find the specific comment
+    try:
+        comment = Comment.objects.get(product=product,owner=request.user)
+    except Http404:
+        comment = []
+    #delete the comment
+    if comment :
+        comment.delete()
+    return redirect(reverse("Shop:product",kwargs={"product_id":product.id}))
+
 
 @login_required
 def checkoutview(request):

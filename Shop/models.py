@@ -21,6 +21,7 @@ class Item(models.Model):
     discount = models.IntegerField(default=0)
     item_image = models.ImageField(null=False,upload_to="product_pics")
     added_on = models.DateTimeField(auto_now_add=True)
+    comments = models.ManyToManyField(User,through="Comment",related_name="product_comments")
 
     class Meta:
         verbose_name_plural="stock items"
@@ -99,3 +100,22 @@ class Cart(models.Model):
 
     def __str__(self):
         return str(self.ref_code)
+
+class Comment(models.Model):
+    text = models.CharField(max_length=300)
+    owner = models.ForeignKey(User,on_delete=models.CASCADE)
+    product = models.ForeignKey(Item,on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.text)
+
+    # i think this method is important to avoid Dos attacks if one user tries to  flood the site with alot of comments
+    @staticmethod
+    def can_comment(request,product):
+        comments = Comment.objects.filter(product=product,owner=request.user)
+        print(len(comments))
+        if len(comments )< 1 :
+            return True
+        elif len(comments)>1:
+            return False

@@ -45,3 +45,14 @@ class promocodeform(forms.Form):
         "aria-describedby": "basic-addon2"
 
     }))
+
+class commentform(forms.Form):
+    text = forms.CharField(max_length=300,widget=forms.Textarea(attrs={
+        "rows":3,
+        "type":"text",
+        "class":"form-control",
+        "aria-label": "Recipient's username",
+        "aria-describedby": "basic-addon2",
+        "placeholder":" Hi, honest comments help people shop better B-) "
+
+    }))

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Cart,Item
+from .models import Cart,Item,Comment
 # Register your models here.
 class ItemAdmin(admin.ModelAdmin):
     list_display=['title','weight','price','in_stock']
@@ -20,7 +20,8 @@ class CartAdmin(admin.ModelAdmin):
     list_display = ['owner','order_date','ordered','payment_method','agent_confirmed']
     list_filter =  ['payment_method','order_date','ordered']
 
-    
+
 
 admin.site.register(Cart,CartAdmin)
 admin.site.register(Item,ItemAdmin)
+admin.site.register(Comment)

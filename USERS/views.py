@@ -75,7 +75,7 @@ def profileview(request):
     created=''
     orders=[]
     try:
-        orders = Cart.objects.filter(owner=user,ordered=True)
+        orders = Cart.objects.filter(owner=user,ordered=True).order_by('-order_date')
     except Http404:
         orders=[]
     #this is for agents to get their valid agent code

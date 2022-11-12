@@ -121,7 +121,7 @@
               {% if comment.owner != request.user %}
                 <div id="story" class="p-3 collapse col-md-6 text-center">
                   <img src="{{comment.owner.profile.profile_image.url}}" enctype="multipart/form-data" class="card-img-top rounded-circle"style="max-width:50px;max-height:50px" >
-                  {% if comment.owner.profile.is_anon_agent == 'True' or comment.owner.profile.is_sales_agent == 'True' %}
+                  {% if comment.owner.profile.is_anon_agent == True or comment.owner.profile.is_sales_agent == True %}
                     <i>AGENT</i>
                   {% else %}
                     <i>USER</i>

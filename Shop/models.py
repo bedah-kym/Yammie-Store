@@ -114,7 +114,7 @@ class Comment(models.Model):
     @staticmethod
     def can_comment(request,product):
         comments = Comment.objects.filter(product=product,owner=request.user)
-        print(len(comments))
+        #print(len(comments))
         if len(comments )< 1 :
             return True
         elif len(comments)>1:

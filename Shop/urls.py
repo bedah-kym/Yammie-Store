@@ -9,6 +9,7 @@ app_name='Shop'
 urlpatterns = [
     path('home/',views.homeview.as_view(),name='home'),
     path('product/<int:product_id>/',views.productview,name='product'),
+    path('deletecomment/<int:product_id>/',views.deletecomment,name='delete-comment'),
     path('category/<str:category>/',views.categoryview.as_view(),name='categories'),
     path('checkout/',views.checkoutview,name='checkout'),
     path('agent_info/',TemplateView.as_view(template_name="Shop/agent_info.html"),name='agent-info-page'),
@@ -18,6 +19,7 @@ urlpatterns = [
     path('add_to_cart/<int:product_id>/',views.add_to_cart,name='add_to_cart'),
     path('remove_from_cart/<int:product_id>/',views.remove_from_cart,name='remove_from_cart'),
     path('remove_singleitem_from_cart/<int:product_id>/',views.remove_singleitem_from_cart,name='remove_singleitem_from_cart'),
+
 ]
 
 if settings.DEBUG:

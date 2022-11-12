@@ -1,11 +1,21 @@
 {% extends 'Shop/base.html' %}
 {% load static %}
+{% load humanize %}
   {% block content %}
     <body>
       <!--Main layout-->
       <main class="mt-5 pt-4 ">
 
-        <div class="container dark-grey-text mt-5">
+        <div class="container dark-grey-text mt-3">
+          {%for  message in messages %}
+              <div class="mx-auto alert alert-{{message.tags}} alert-dissmissible fade show col-lg-6 m-4 "role="alert" style="min-width:100px">
+                  {{message}}
+                  <button type="button" class="close"data-dismiss="alert"aria-label="close">
+                        <span aria-hidden="true">&times;</span>
+                  </button>
+
+              </div>
+          {% endfor %}
 
           <!--Grid row-->
           <div class="row wow fadeIn">
@@ -17,6 +27,7 @@
 
             </div>
             <!--Grid column-->
+
 
             <!--Grid column-->
             <div class="col-md-6 mb-4">
@@ -78,34 +89,71 @@
           <!--Grid row-->
 
           <hr>
+          {% if show == True %}
+                <strong>please leave a comment </strong>
+              <form method="post">{%csrf_token%}
+                <div class="md-form mb-5">
+                  {{comment_form.text}}
+                </div>
+                <button class="btn btn-secondary"type="submit" name="">comment</button>
+              </form>
+          {% endif %}
+
 
           <!--Grid row-->
-          <div class="row d-flex justify-content-center wow fadeIn">
+          <div  class="row d-flex justify-content-center wow fadeIn ">
+            {% if mycomment %}
+              {% for mine in mycomment %}
+                  <div id="story" class="p-3 collapse col-md-6 text-center border border-shadow-sm "style="background-color: beige">
+                    <img src="{{mine.owner.profile.profile_image.url}}" enctype="multipart/form-data" class="card-img-top rounded-circle"style="max-width:50px;max-height:50px" >
+                    <strong>my comment</strong>
+                    <h4 class="my-4 h4">{{mine.owner.username}}</h4>
+                    <p style="font-family: monospace;font-style:oblique;">{{mine.text}}</p>
+                    <h6>{{mine.created_at|naturaltime}}</h6>
+                    <button class="btn btn-outline bg-light" name=""><a href="{% url 'Shop:delete-comment' product.id %}">delete</a></button>
+                  </div>
+
+              {% endfor %}
+            {% endif %}
 
             <!--Grid column-->
-            <div class="col-md-6 text-center">
+            {% for comment in comments %}
+              {% if comment.owner != request.user %}
+                <div id="story" class="p-3 collapse col-md-6 text-center">
+                  <img src="{{comment.owner.profile.profile_image.url}}" enctype="multipart/form-data" class="card-img-top rounded-circle"style="max-width:50px;max-height:50px" >
+                  {% if comment.owner.profile.is_anon_agent == True or comment.owner.profile.is_sales_agent == True %}
+                    <i>AGENT</i>
+                  {% else %}
+                    <i>USER</i>
+                  {% endif %}
+                  <h4 class="my-4 h4">{{comment.owner.username}}</h4>
+                  <p style="font-family: monospace;font-style:oblique;">{{comment.text}}</p>
+                  <h6>{{comment.created_at|naturaltime}}</h6>
+                </div>
+              {% endif %}
+            {% endfor %}
 
-              <h4 class="my-4 h4">Additional information</h4>
+            {% if comments %}
+              <button style="font-family:cursive;" type="button" class="btn btn-outline-primary" data-toggle="collapse" data-target="#story">show/hide comments</button>
+            {% endif %}
 
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus suscipit modi sapiente illo soluta odit
-                voluptates,
-                quibusdam officia. Neque quibusdam quas a quis porro? Molestias illo neque eum in laborum.</p>
 
-            </div>
             <!--Grid column-->
+
 
           </div>
-          <!--Grid row-->
 
+          <hr>
+          <!--Grid row-->
+          <h5><strong> Related products</strong></h5>
           <!--Grid row-->
           <div class="row wow fadeIn">
 
             <!--Grid column-->
             {% for item in related_items %}
                 <div class="col-lg-4 col-md-12 mb-4">
-
+                  <strong>{{item.title}}</strong>
                   <img src="{{item.item_image.url}}" enctype="multipart/form-data"  class="img-fluid" alt="">
-
                 </div>
             {% endfor %}
             <!--Grid column-->

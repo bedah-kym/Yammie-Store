@@ -7,7 +7,7 @@ class PromoInline(admin.TabularInline):
 class ProfileAdmin(admin.ModelAdmin):
     fieldsets=[
     (' ',{"fields":['user_name']}),
-    ('agent details ',{"fields":['is_anon_agent','is_sales_agent','cell_number','commission']}),
+    ('agent details ',{"fields":['profile_image','is_anon_agent','is_sales_agent','cell_number','commission']}),
     ]
     inlines=[PromoInline]
     list_display=['user_name','is_anon_agent','is_sales_agent','cell_number']

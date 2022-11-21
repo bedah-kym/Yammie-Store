@@ -32,7 +32,7 @@ def productview(request,product_id):
         the product view does a nice trick of using the products category to get some related_items
         for the template if the product dosent have related items we just get 3 random items
     """
-    if request.user.profile.cell_number >0 :
+    if request.user.profile.cell_number:
         try:
             product = get_object_or_404(Item,pk=product_id)
         except Http404 :
@@ -79,7 +79,7 @@ def productview(request,product_id):
                 comm_form = commentform(request.POST)
                 messages.warning(request,comm_form.errors)
                 #messages.warning(request,"sorry too many words in your comment use less than 300 words!")
-    
+
 
     ctx= {
         "related_items":related_items,

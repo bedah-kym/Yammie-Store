@@ -133,15 +133,16 @@
               {% endif %}
             {% endfor %}
 
-            {% if comments %}
-              <button style="font-family:cursive;" type="button" class="btn btn-outline-primary" data-toggle="collapse" data-target="#story">show/hide comments</button>
-            {% endif %}
+
 
 
             <!--Grid column-->
 
 
           </div>
+          {% if comments %}
+            <button id="commentbtn" style="font-family:cursive;" type="button" class="btn btn-outline-primary" data-toggle="collapse" data-target="#story" onclick="showhide()">show comments</button>
+          {% endif %}
 
           <hr>
           <!--Grid row-->
@@ -163,6 +164,7 @@
 
         </div>
       </main>
-      <!--Main layout-->
+
     </body>
+
   {% endblock %}

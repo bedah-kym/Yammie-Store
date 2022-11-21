@@ -197,13 +197,20 @@ def redeem(request):
     items = cart.items.filter(user=request.user,ordered=False)
     total = items.count()
     form = checkoutform()
+    pform = promocodeform()
     discount= 0
+    promocode=""
     if request.method == 'POST':
         pform = promocodeform(request.POST)
         if pform.is_valid():
             promocode = pform.cleaned_data['p_code']
             try:
                 code = get_object_or_404(PromoCode,token=promocode)
+                newcode= PromoCode.get_valid_code(code.owner,code)
+                if newcode == code : #if the current PromoCode is not updated raise an error
+                    pass
+                else:
+                    raise Http404
             except Http404:
                 code ="invalid"
                 messages.warning(request,'invalid promocode, please input the correct/updated agent refcode !')
@@ -212,7 +219,7 @@ def redeem(request):
             cart.discounted_price = cart.get_total_cart_price()-discount
             cart.agent_code = promocode
             cart.save()
-            #print('discount',discount,'comm',agent,cart.discounted_price)
+
 
     context= {
         "items":items,

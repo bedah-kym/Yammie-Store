@@ -198,6 +198,18 @@
     <script type="text/javascript">
       // Animations initialization
       new WOW().init();
+      // show - hide comment button , ijust learned vanilla haha this is a mess
+      function showhide(){
+        var button=""
+        button = document.getElementById('commentbtn').innerHTML;
+        button = button.slice(0,13);
+        if (button == "hide comments"){
+          document.getElementById('commentbtn').innerHTML = "show comments"
+        }
+        else{
+          document.getElementById('commentbtn').innerHTML = "hide comments";
+        }
+      }
     </script>
 
   </body>

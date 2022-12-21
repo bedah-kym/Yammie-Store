@@ -150,7 +150,7 @@ def checkoutview(request):
                 cart.ordered = True
                 cart.save()
                 if payment == 'LipanaMpesa':
-                    return HttpResponseRedirect(reverse('index'))
+                    return HttpResponseRedirect(reverse('chargeclient'))
                 else:
                     promocode = cart.agent_code
                     try:

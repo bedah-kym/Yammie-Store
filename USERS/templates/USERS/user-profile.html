@@ -108,6 +108,13 @@
                       <img src="{% static 'Shop/img/wallet.gif' %}"  class="card-img-top" style="margin:0 auto ;background-size:contain; background-repeat:no-repeat; max-width:70px;max-height:70px;" alt="">
                       <p class="pt-2">commission earned Kshs {{user_profile.commission}}/=</p>
 
+                      {%if user_profile.commission < 200 %}
+                          <button type="submit" class="btn bg-success">
+                          <a href="{%url 'payagent'%}">withdraw</a> 
+                          </button>
+
+                      {%endif %}
+
                       <hr>
                       <p>{{orders.count}} orders so far.</p>
                   </h6>

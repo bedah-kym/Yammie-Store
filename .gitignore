@@ -5,6 +5,7 @@
 __pycache__
 db.sqlite3
 media
+code_generator.py
 
 # Backup files #
 *.bak

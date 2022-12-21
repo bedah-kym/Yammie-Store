@@ -22,11 +22,12 @@
                     <p>Hi!,You Can pay here just input your mpesa number and safaricom will give you a prompt
                     to pay.<br></p>
                   <p> after you pay we will call you to confirm your order and deliverly location</p>
+
                 </h5>
 
 
               <!--Card content-->
-
+              <caption><b>Dont use the +254 format!</b></caption>
             </div>
             <!-- Heading -->
             <h2 class="my-5 h2 text-center">MPESA FORM </h2>
@@ -39,7 +40,6 @@
 
                 <!--Card-->
                 <div class="card">
-
                   <!--Card content-->
                   <form class="card-body" method="POST">{% csrf_token %}
                     {% if form.errors %}
@@ -47,9 +47,8 @@
                          {{form.errors}}
                       </ul>
                     {% endif %}
-                    <!--address-->
+                    <!--validate phone number -->
                     <div class="md-form mb-5">
-                    <!--  <input type="text" id="address" class="form-control" placeholder="eg kienyeji village mwangis shop"> -->
                       {{form.phone_number}}
                       <label for="address" class=""></label>
                     </div>

@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>YAMMIE Fresh</title>
+    <title>MySoko</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
     <!-- Bootstrap core CSS -->
@@ -15,6 +15,8 @@
     <link href="{% static 'Shop/css/mdb.min.css' %}" rel="stylesheet">
     <!-- Your custom styles (optional) -->
     <link href="{% static 'Shop/css/style.min.css' %}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://kit.fontawesome.com/a47a985e67.css" crossorigin="anonymous">
     <style type="text/css">
       html,
       body,
@@ -52,7 +54,7 @@
 
         <!-- Brand -->
         <a class="navbar-brand waves-effect" href="{% url 'Shop:home' %}">
-          <strong class="blue-text">YAMMIE FRESH LTD</strong>
+          <strong class="blue-text">MySoko</strong>
         </a>
 
         <!-- Collapse -->
@@ -87,7 +89,7 @@
                   <ul class="navbar-nav nav-flex-icons">
                     <li class="nav-item">
                       <a href="{% url 'users:profile' %}" class="nav-link waves-effect" >
-                        <i class="far fa-envelope"></i>
+                        <i class="fa fa-user"></i>
                       </a>
                     </li>
 
@@ -148,7 +150,7 @@
           <a href="{% url 'Shop:agent-info-page' %}"><strong class="text">become our agent</strong></a>
       {% endif %}
       <!-- Social icons -->
-      <div class="pb-4">
+      <div class="p-4">
         <a href="https://web.facebook.com/yammiefeeds" target="_blank">
           <i class="fab fa-facebook-f mr-3"></i>
         </a>

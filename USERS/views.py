@@ -11,6 +11,14 @@ from .models import profile,PromoCode
 from payment.code_generator import refcode
 from django.contrib.auth.models import User
 
+#reportlab imports
+from django.http import FileResponse
+import io
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+
+
 
 def registerview(request):
 
@@ -106,6 +114,103 @@ def profileview(request):
         'created':created
     }
     return render(request,'USERS/user-profile.html',context)
+
+@login_required
+def pdf_order_download(request):
+    #find the users orders
+    try:
+        orders = Cart.objects.filter(owner=request.user,ordered=True).order_by('-order_date')
+    except Http404:
+        orders=[]
+        return redirect('users:profile')
+
+    if len(orders) >0 :
+        #bytestream buffer
+        buffer = io.BytesIO()
+        #canvas to hold the data
+        c= canvas.Canvas(buffer ,pagesize=letter, bottomup=0)
+        #textobject
+        textob = c.beginText()
+        textob.setTextOrigin(inch,inch)
+        textob.setFont('Helvetica',15)
+        #list to store the lines
+        orderlist=[]
+        counter=0
+        #write all the orders line by line
+        for order in orders:
+            counter+=1
+            orderlist.append(str(counter))
+            orderlist.append('Date ordered :'+     str(order.order_date))
+            orderlist.append('Ordered by :' +      str(order.owner.username))
+            orderlist.append('Cart number :'+      str(order.ref_code))
+            orderlist.append('total price :'+      str(order.total_price))
+            orderlist.append('payment method :'+    str(order.payment_method))
+            orderlist.append('Agent confirmed ?:'+ str(order.agent_confirmed))
+            orderlist.append('Agent promocode :'+ str(order.agent_code))
+            orderlist.append("----------------------------  ")
+
+        for orderitem in orderlist:
+            textob.textLine(orderitem)
+
+        #close up
+        c.drawText(textob)
+        c.showPage()
+        c.save()
+        buffer.seek(0)
+        return FileResponse(buffer, as_attachment=True, filename='Mysoko_all_orders.pdf')
+    else:
+        messages.warning(request,'you have no complete orders!')
+        return redirect('users:profile')
+
+@login_required
+def single_pdf_order_download(request):
+
+    #find the users orders
+    try:
+        orders = Cart.objects.filter(owner=request.user,ordered=True)[::-1]
+        order = orders[0]
+        
+    except Http404:
+        messages.warning("you have no orders!")
+        return redirect('users:profile')
+
+
+    #bytestream buffer
+    buffer = io.BytesIO()
+    #canvas to hold the data
+    c= canvas.Canvas(buffer ,pagesize=letter, bottomup=0)
+    #textobject
+    textob = c.beginText()
+    textob.setTextOrigin(inch,inch)
+    textob.setFont('Helvetica',15)
+    #list to store the lines
+    orderlist=[]
+    counter=0
+    #write all the orders line by line
+    orderlist.append('Date ordered :'+     str(order.order_date))
+    orderlist.append('Ordered by :' +      str(order.owner.username))
+    orderlist.append('Cart number :'+      str(order.ref_code))
+    orderlist.append('total price :'+      str(order.total_price))
+    orderlist.append('payment method :'+    str(order.payment_method))
+    orderlist.append('Agent confirmed ?:'+ str(order.agent_confirmed))
+    orderlist.append('Agent promocode :'+ str(order.agent_code))
+    orderlist.append("----------------------------.............. ")
+
+
+
+    for orderitem in orderlist:
+        textob.textLine(orderitem)
+
+    #close up
+    c.drawText(textob)
+    c.showPage()
+    c.save()
+    buffer.seek(0)
+    return FileResponse(buffer, as_attachment=True, filename='Mysoko_single_order.pdf')
+
+
+
+
 
 def profilepicupdate(request):
     user= request.user

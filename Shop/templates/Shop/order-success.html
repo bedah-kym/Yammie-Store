@@ -6,7 +6,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>YAMMIE Fresh</title>
+  <title>MySoko</title>
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
   <!-- Bootstrap core CSS -->
@@ -17,7 +17,7 @@
   <link href="{% static 'Shop/css/style.min.css' %}" rel="stylesheet">
 
   <a class="navbar-brand waves-effect" href="{% url 'Shop:home' %}">
-    <strong class="blue-text" style="margin:0 auto">YAMMIE FRESH LTD</strong>
+    <strong class="blue-text" style="margin:0 auto">MySoko</strong>
   </a>
   <body>
 
@@ -40,6 +40,9 @@
               <p>your refference code is {{refcode}}</p>
             </strong>
           </h5>
+          <h4>
+            <p>you can download your order info in pdf fomat <a class="btn btn-success " href="{% url 'users:single_order_to_pdf'%}">here</a>  </p>
+          </h4>
 
 
         <!--Card content-->
@@ -70,7 +73,7 @@
         </div>
       {% endcomment %}
 
-      
+
 
       <!-- Social icons -->
       <div class="pb-4">

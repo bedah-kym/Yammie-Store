@@ -44,7 +44,6 @@ class Item(models.Model):
             img.save(self.item_image.path)
 """
 
-
 class CartItem (models.Model):
     item = models.ForeignKey(Item,on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)

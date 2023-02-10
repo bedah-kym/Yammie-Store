@@ -13,4 +13,5 @@ urlpatterns = [
     path('profile/',views.profileview,name='profile'),
     path('profile-image-update/',views.profilepicupdate,name='profile-image-update'),
     path('order_to_pdf/',views.pdf_order_download,name='order_to_pdf'),
+    path('single_order_to_pdf/',views.single_pdf_order_download,name='single_order_to_pdf'),
 ]

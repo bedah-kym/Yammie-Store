@@ -95,7 +95,9 @@ INSTALLED_APPS = [
     'USERS',
     'crispy_forms',
     'django_daraja',
-    'payment'
+    'payment',
+    
+
 
 ]
 

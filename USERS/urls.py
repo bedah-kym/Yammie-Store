@@ -12,4 +12,5 @@ urlpatterns = [
     path('unmake-agent/',views.unmakeagent,name='unmake-agent'),
     path('profile/',views.profileview,name='profile'),
     path('profile-image-update/',views.profilepicupdate,name='profile-image-update'),
+    path('order_to_pdf/',views.pdf_order_download,name='order_to_pdf'),
 ]

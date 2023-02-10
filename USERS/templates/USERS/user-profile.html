@@ -103,14 +103,14 @@
                       </p>
                       <hr>
                       <p>active agent reference code [<strong>{{code}}</strong>]</p>
-                      <p>code will expire two weeks from {{created}} </p>
+                      <p>NOTE: if you are not a company sales agent this code will expire two weeks from {{created}}  </p>
                       <hr>
                       <img src="{% static 'Shop/img/wallet.gif' %}"  class="card-img-top" style="margin:0 auto ;background-size:contain; background-repeat:no-repeat; max-width:70px;max-height:70px;" alt="">
                       <p class="pt-2">commission earned Kshs {{user_profile.commission}}/=</p>
 
                       {%if user_profile.commission < 200 %}
                           <button type="submit" class="btn bg-success">
-                          <a href="{%url 'payagent'%}">withdraw</a> 
+                          <a href="{%url 'payagent'%}">withdraw</a>
                           </button>
 
                       {%endif %}
@@ -182,6 +182,11 @@
                     {% endfor %}
                   </tbody>
                   <td><a class="btn btn-primary " href="{% url 'Shop:home'%}">&laquo; continue shopping</a></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td><a class="btn btn-success " href="{% url 'users:order_to_pdf'%}"> download order pdf</a></td>
 
               </table>
             </div>

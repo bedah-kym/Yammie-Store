@@ -19,7 +19,7 @@ It has regular buy sell features of a common e-commerce site ie:
  the order agent calls the clients to confirm orders and specific location details 
 </p>
 
-<img src="url(https://user-images.githubusercontent.com/85731257/218079098-ccf3545b-54a9-4668-9ec8-025f9e4431d8.png)">
+<img src="https://user-images.githubusercontent.com/85731257/218079098-ccf3545b-54a9-4668-9ec8-025f9e4431d8.png">
 ![Screenshot 2023-02-09 090950](https://user-images.githubusercontent.com/85731257/218079106-8dc07581-2621-47ee-aef9-edc6dcd3d285.png)
 ![Screenshot 2023-02-09 091221](https://user-images.githubusercontent.com/85731257/218079114-dfce6bf3-d3e4-4e06-b0a8-efd6fc4547e6.png)
 ![Screenshot 2023-02-09 091357](https://user-images.githubusercontent.com/85731257/218079127-be04f86e-004e-423b-b408-e2edec4ffacf.png)
